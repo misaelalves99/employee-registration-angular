@@ -1,0 +1,43 @@
+<!-- app/components/employee/employee-filter/employee-filter.component.html -->
+
+<form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="formContainer">
+  <div>
+    <label for="search" class="label">Buscar</label>
+    <input id="search" type="text" formControlName="search" class="input" placeholder="Nome, CPF, email ou telefone..." />
+  </div>
+
+  <div>
+    <label for="departmentId" class="label">Departamento (ID)</label>
+    <input id="departmentId" type="number" formControlName="departmentId" class="input" placeholder="Ex: 1, 2, 3..." />
+  </div>
+
+  <div>
+    <label for="position" class="label">Cargo</label>
+    <select id="position" formControlName="position" class="select">
+      <option value="">Selecione</option>
+      <option *ngFor="let pos of positions" [value]="pos">{{ pos }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="isActive" class="label">Status</label>
+    <select id="isActive" formControlName="isActive" class="select">
+      <option value="">Todos</option>
+      <option value="true">Ativo</option>
+      <option value="false">Inativo</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="admissionDateFrom" class="label">Admissão de</label>
+    <input id="admissionDateFrom" type="date" formControlName="admissionDateFrom" class="input" />
+  </div>
+
+  <div>
+    <label for="admissionDateTo" class="label">Até</label>
+    <input id="admissionDateTo" type="date" formControlName="admissionDateTo" class="input" />
+  </div>
+
+  <button type="submit" class="button">Filtrar</button>
+  <button type="button" class="button" (click)="onReset()">Limpar Filtros</button>
+</form>

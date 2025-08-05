@@ -1,0 +1,72 @@
+<!-- app/components/employee/employee-filter-form/employee-filter-form.component.html -->
+
+<form class="form">
+  <div>
+    <label for="departmentId" class="label">Departamento (ID)</label>
+    <input
+      type="number"
+      id="departmentId"
+      name="departmentId"
+      class="input"
+      [value]="filters.departmentId"
+      (input)="onChange($event)"
+      placeholder="Ex: 1, 2, 3..."
+      min="0"
+    />
+  </div>
+
+  <div>
+    <label for="position" class="label">Cargo</label>
+    <select
+      id="position"
+      name="position"
+      class="select"
+      [value]="filters.position"
+      (change)="onChange($event)"
+    >
+      <option value="">Todos</option>
+      <option *ngFor="let pos of positions" [value]="pos">{{ pos }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="isActive" class="label">Status</label>
+    <select
+      id="isActive"
+      name="isActive"
+      class="select"
+      [value]="filters.isActive"
+      (change)="onChange($event)"
+    >
+      <option value="">Todos</option>
+      <option value="true">Ativo</option>
+      <option value="false">Inativo</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="admissionDateFrom" class="label">Admissão de</label>
+    <input
+      type="date"
+      id="admissionDateFrom"
+      name="admissionDateFrom"
+      class="input"
+      [value]="filters.admissionDateFrom"
+      (input)="onChange($event)"
+    />
+  </div>
+
+  <div>
+    <label for="admissionDateTo" class="label">Até</label>
+    <input
+      type="date"
+      id="admissionDateTo"
+      name="admissionDateTo"
+      class="input"
+      [value]="filters.admissionDateTo"
+      (input)="onChange($event)"
+    />
+  </div>
+
+  <button type="button" class="button">Filtrar</button>
+</form>

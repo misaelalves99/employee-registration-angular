@@ -1,0 +1,93 @@
+<!-- app/components/employee/employee-form/employee-form.component.html -->
+
+<form (ngSubmit)="handleSubmit()" class="form">
+  <!-- Nome -->
+  <div>
+    <label class="label">Nome</label>
+    <input type="text" class="input" [(ngModel)]="formData.name" name="name" />
+    <p *ngIf="errors.name" class="errorText">{{ errors.name }}</p>
+  </div>
+
+  <!-- CPF -->
+  <div>
+    <label class="label">CPF</label>
+    <input type="text" class="input" [(ngModel)]="formData.cpf" name="cpf" />
+    <p *ngIf="errors.cpf" class="errorText">{{ errors.cpf }}</p>
+  </div>
+
+  <!-- Email -->
+  <div>
+    <label class="label">Email</label>
+    <input type="email" class="input" [(ngModel)]="formData.email" name="email" />
+    <p *ngIf="errors.email" class="errorText">{{ errors.email }}</p>
+  </div>
+
+  <!-- Telefone -->
+  <div>
+    <label class="label">Telefone</label>
+    <input type="text" class="input" [(ngModel)]="formData.phone" name="phone" />
+    <p *ngIf="errors.phone" class="errorText">{{ errors.phone }}</p>
+  </div>
+
+  <!-- Endereço -->
+  <div>
+    <label class="label">Endereço</label>
+    <input type="text" class="input" [(ngModel)]="formData.address" name="address" />
+    <p *ngIf="errors.address" class="errorText">{{ errors.address }}</p>
+  </div>
+
+  <!-- Cargo -->
+  <div>
+    <label class="label">Cargo</label>
+    <select class="select" [(ngModel)]="formData.position" name="position">
+      <option value="">Selecione</option>
+      <option *ngFor="let pos of positions" [value]="pos">{{ pos }}</option>
+    </select>
+    <p *ngIf="errors.position" class="errorText">{{ errors.position }}</p>
+  </div>
+
+  <!-- Departamento -->
+  <div>
+    <label class="label">Departamento</label>
+    <select class="select" [(ngModel)]="formData.departmentId" name="departmentId">
+      <option value="">Selecione</option>
+      <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+    </select>
+    <p *ngIf="errors.departmentId" class="errorText">{{ errors.departmentId }}</p>
+  </div>
+
+  <!-- Salário -->
+  <div>
+    <label class="label">Salário</label>
+    <input
+      type="number"
+      step="0.01"
+      class="input"
+      [(ngModel)]="formData.salary"
+      name="salary"
+    />
+    <p *ngIf="errors.salary" class="errorText">{{ errors.salary }}</p>
+  </div>
+
+  <!-- Data de admissão -->
+  <div>
+    <label class="label">Data de Admissão</label>
+    <input type="date" class="input" [(ngModel)]="formData.admissionDate" name="admissionDate" />
+    <p *ngIf="errors.admissionDate" class="errorText">{{ errors.admissionDate }}</p>
+  </div>
+
+  <!-- Checkbox -->
+  <div class="checkboxContainer">
+    <input
+      type="checkbox"
+      [checked]="formData.isActive"
+      (change)="handleCheckboxChange()"
+      class="formCheckbox"
+      id="isActive"
+    />
+    <label for="isActive">Ativo</label>
+  </div>
+
+  <!-- Submit -->
+  <button type="submit" class="submitButton">Cadastrar Funcionário</button>
+</form>

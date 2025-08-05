@@ -1,0 +1,54 @@
+<!-- app/components/employee/employee-edit-form/employee-edit-form.component.html -->
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="container">
+  <h1 class="title">Editar Funcionário</h1>
+
+  <div
+    class="formGroup"
+    *ngFor="let field of [
+      { name: 'name', label: 'Nome', type: 'text' },
+      { name: 'cpf', label: 'CPF', type: 'text' },
+      { name: 'email', label: 'Email', type: 'email' },
+      { name: 'phone', label: 'Telefone', type: 'text' },
+      { name: 'address', label: 'Endereço', type: 'text' },
+      { name: 'salary', label: 'Salário', type: 'number' },
+      { name: 'admissionDate', label: 'Data de Admissão', type: 'date' }
+    ]"
+  >
+    <label [for]="field.name" class="label">{{ field.label }}</label>
+    <input
+      [id]="field.name"
+      [type]="field.type"
+      [formControlName]="field.name"
+      class="input"
+      [step]="field.name === 'salary' ? '0.01' : null"
+    />
+    <small class="errorText" *ngIf="getError(field.name)">
+      {{ getError(field.name) }}
+    </small>
+  </div>
+
+  <div class="formGroup">
+    <label for="position" class="label">Cargo</label>
+    <select id="position" formControlName="position" class="select">
+      <option value="">Selecione</option>
+      <option *ngFor="let pos of positions" [value]="pos">{{ pos }}</option>
+    </select>
+    <small class="errorText" *ngIf="getError('position')">
+      {{ getError('position') }}
+    </small>
+  </div>
+
+  <div class="formGroup">
+    <label for="departmentId" class="label">Departamento</label>
+    <select id="departmentId" formControlName="departmentId" class="select">
+      <option value="">Selecione</option>
+      <option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</option>
+    </select>
+    <small class="errorText" *ngIf="getError('departmentId')">
+      {{ getError('departmentId') }}
+    </small>
+  </div>
+
+  <button type="submit" class="button" [disabled]="form.invalid">Salvar</button>
+</form>

@@ -1,0 +1,10 @@
+<!-- app/components/employee/employee-toggle-status-button/employee-toggle-status-button.component.html -->
+
+<button
+  (click)="handleToggle()"
+  [disabled]="loading"
+  [ngClass]="[ 'button', isActive ? 'inactive' : 'active' ]"
+  [attr.title]="isActive ? 'Inativar Funcionário' : 'Ativar Funcionário'"
+>
+  {{ loading ? 'Carregando...' : isActive ? 'Inativo' : 'Ativo' }}
+</button>

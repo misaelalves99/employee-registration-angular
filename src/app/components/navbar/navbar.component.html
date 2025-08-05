@@ -1,0 +1,27 @@
+<!-- src/app/components/navbar/navbar.component.html -->
+
+<nav class="navbar">
+  <div class="container">
+    <a routerLink="/" class="brand">Sistema de Funcionários</a>
+    <ul class="navList">
+      <li class="navItem">
+        <a
+          routerLink="/"
+          [ngClass]="{ activeLink: currentPath === '/' }"
+        >Início</a>
+      </li>
+      <li class="navItem">
+        <a
+          routerLink="/funcionarios"
+          [ngClass]="{ activeLink: currentPath.startsWith('/funcionarios') }"
+        >Funcionários</a>
+      </li>
+      <li class="navItem">
+        <a
+          routerLink="/privacidade"
+          [ngClass]="{ activeLink: currentPath === '/privacidade' }"
+        >Privacidade</a>
+      </li>
+    </ul>
+  </div>
+</nav>

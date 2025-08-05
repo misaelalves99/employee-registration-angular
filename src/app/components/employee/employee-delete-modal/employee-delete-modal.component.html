@@ -1,0 +1,25 @@
+<!-- app/components/employee/employee-delete-modal/employee-delete-modal.component.html -->
+
+<div class="backdrop" (click)="close.emit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h2 class="title">Confirmar Exclusão</h2>
+    <p class="message">
+      Tem certeza que deseja excluir <strong>{{ employee?.name }}</strong>?
+    </p>
+
+    <ul class="employeeDetails">
+      <li><strong>ID:</strong> {{ employee?.id }}</li>
+      <li><strong>CPF:</strong> {{ employee?.cpf }}</li>
+      <li><strong>Email:</strong> {{ employee?.email }}</li>
+      <li><strong>Cargo:</strong> {{ employee?.position }}</li>
+      <li><strong>Departamento:</strong> {{ employee?.department?.name ?? 'Não informado' }}</li>
+    </ul>
+
+    <div class="actions">
+      <button class="button cancel" (click)="close.emit()" [disabled]="loading">Cancelar</button>
+      <button class="button confirm" (click)="handleDelete()" [disabled]="loading">
+        {{ loading ? 'Deletando...' : 'Confirmar Exclusão' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<!-- src/app/pages/employee-page/employee-page.component.html -->
+
+<main class="container">
+  <h1 class="title">Lista de Funcionários</h1>
+
+  <div class="contentWrapper">
+    <aside class="sidebar">
+      <app-employee-filter (filterChange)="onFilterChange($event)"></app-employee-filter>
+    </aside>
+
+    <section class="rightSection">
+      <div class="topBar">
+        <a routerLink="/funcionarios/cadastrar" class="btnPrimary">Novo Funcionário</a>
+        <input
+          type="text"
+          [value]="query"
+          (input)="onQueryChange($event)"
+          placeholder="Buscar por nome, CPF, e-mail ou telefone..."
+          class="searchInput"
+        />
+      </div>
+
+      <p *ngIf="employees.length === 0" class="noResults">Nenhum funcionário encontrado.</p>
+
+      <table *ngIf="employees.length > 0" class="table">
+        <thead class="thead">
+          <tr>
+            <th class="th">Nome</th>
+            <th class="th">CPF</th>
+            <th class="th">Cargo</th>
+            <th class="th">Departamento</th>
+            <th class="th">Admissão</th>
+            <th class="th">Status</th>
+            <th class="th">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let emp of employees" class="trHover">
+            <td class="td">{{ emp.name }}</td>
+            <td class="td">{{ emp.cpf }}</td>
+            <td class="td">{{ emp.position }}</td>
+            <td class="td">{{ emp.department?.name || '-' }}</td>
+            <td class="td">{{ emp.admissionDate | date: 'shortDate' }}</td>
+            <td class="td">{{ emp.isActive ? 'Ativo' : 'Inativo' }}</td>
+            <td class="td actions">
+              <a [routerLink]="['/funcionarios/detalhes', emp.id]" class="btn btnInfo">Detalhes</a>
+              <a [routerLink]="['/funcionarios/editar', emp.id]" class="btn btnWarning">Editar</a>
+              <button (click)="toggleActiveStatus(emp)" [ngClass]="emp.isActive ? 'btnSecondary' : 'btnSuccess'" class="btn">
+                {{ emp.isActive ? 'Inativar' : 'Ativar' }}
+              </button>
+              <button (click)="openDeleteModal(emp)" class="btn btnDanger">Deletar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <app-employee-delete-modal
+    *ngIf="selectedEmployeeToDelete"
+    [employee]="selectedEmployeeToDelete"
+    (close)="closeDeleteModal()"
+    (deleted)="confirmDelete()"
+  ></app-employee-delete-modal>
+</main>

@@ -1,0 +1,65 @@
+<!-- src/app/components/employee/employee-create-form/employee-create-form.component.html -->
+
+<form [formGroup]="form" (ngSubmit)="handleSubmit()" novalidate>
+  <div class="formGroup">
+    <label for="name">Nome:</label>
+    <input id="name" type="text" formControlName="name" />
+    <small *ngIf="errors['name']" class="errorText">{{ errors['name'] }}</small>
+  </div>
+
+  <div class="formGroup">
+    <label for="cpf">CPF:</label>
+    <input id="cpf" type="text" formControlName="cpf" />
+    <small *ngIf="errors['cpf']" class="errorText">{{ errors['cpf'] }}</small>
+  </div>
+
+  <div class="formGroup">
+    <label for="email">Email:</label>
+    <input id="email" type="email" formControlName="email" />
+    <small *ngIf="errors['email']" class="errorText">{{ errors['email'] }}</small>
+  </div>
+
+  <div class="formGroup">
+    <label for="phone">Telefone:</label>
+    <input id="phone" type="text" formControlName="phone" />
+  </div>
+
+  <div class="formGroup">
+    <label for="address">Endereço:</label>
+    <input id="address" type="text" formControlName="address" />
+  </div>
+
+  <div class="formGroup">
+    <label for="position">Cargo:</label>
+    <select id="position" formControlName="position">
+      <option value="">Selecione</option>
+      <option *ngFor="let pos of POSITIONS" [value]="pos">{{ pos }}</option>
+    </select>
+    <small *ngIf="errors['position']" class="errorText">{{ errors['position'] }}</small>
+  </div>
+
+  <div class="formGroup">
+    <label for="department">Departamento:</label>
+    <select id="department" formControlName="departmentId">
+      <option value="">Selecione</option>
+      <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+    </select>
+    <small *ngIf="errors['departmentId']" class="errorText">{{ errors['departmentId'] }}</small>
+  </div>
+
+  <div class="formGroup">
+    <label for="salary">Salário:</label>
+    <input id="salary" type="number" formControlName="salary" />
+    <small *ngIf="errors['salary']" class="errorText">{{ errors['salary'] }}</small>
+  </div>
+
+  <div class="formGroup">
+    <label for="admissionDate">Data de Admissão:</label>
+    <input id="admissionDate" type="date" formControlName="admissionDate" />
+    <small *ngIf="errors['admissionDate']" class="errorText">{{ errors['admissionDate'] }}</small>
+  </div>
+
+  <div class="formActions">
+    <button type="submit">Cadastrar Funcionário</button>
+  </div>
+</form>

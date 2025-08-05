@@ -1,0 +1,37 @@
+/* src/app/layout/layout.component.css */
+
+/* Estilos para o corpo principal da aplicação */
+.body {
+  display: flex;
+  flex-direction: column; /* Organiza os elementos verticalmente: navbar, main, footer */
+  min-height: 100vh; /* Garante que o corpo ocupe pelo menos a altura total da viewport */
+  font-family: 'Inter', sans-serif; /* Aplica a fonte Inter, conforme especificado anteriormente */
+  background-color: #f4f7f6; /* Cor de fundo suave para toda a aplicação */
+  color: #333; /* Cor de texto padrão */
+}
+
+/* Estilos para a área principal de conteúdo */
+.main {
+  flex-grow: 1; /* Permite que o conteúdo principal ocupe o espaço restante */
+  padding: 20px; /* Espaçamento interno para o conteúdo */
+  max-width: 1200px; /* Largura máxima para o conteúdo central */
+  margin: 0 auto; /* Centraliza o conteúdo principal na página */
+  width: 100%; /* Garante que ocupe a largura total disponível até o max-width */
+  box-sizing: border-box; /* Inclui padding e borda na largura total */
+}
+
+/* Media queries para responsividade */
+
+/* Para telas menores (celulares) */
+@media (max-width: 768px) {
+  .main {
+    padding: 15px; /* Reduz o padding em telas menores */
+  }
+}
+
+/* Para telas muito pequenas (celulares em modo paisagem) */
+@media (max-width: 480px) {
+  .main {
+    padding: 10px; /* Reduz ainda mais o padding */
+  }
+}

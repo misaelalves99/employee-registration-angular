@@ -1,0 +1,28 @@
+
+
+<div *ngIf="notFound" class="notFoundContainer">
+  <h1 class="notFoundTitle">Funcionário não encontrado</h1>
+  <a routerLink="/funcionarios" class="btnPrimary">Voltar para a lista</a>
+</div>
+
+<div *ngIf="employee as emp" class="container">
+  <h1 class="title">Detalhes do Funcionário</h1>
+
+  <div class="card">
+    <p><strong class="label">Nome:</strong> {{ emp.name }}</p>
+    <p><strong class="label">CPF:</strong> {{ emp.cpf }}</p>
+    <p><strong class="label">Email:</strong> {{ emp.email }}</p>
+    <p><strong class="label">Telefone:</strong> {{ emp.phone || 'Não informado' }}</p>
+    <p><strong class="label">Endereço:</strong> {{ emp.address || 'Não informado' }}</p>
+    <p><strong class="label">Cargo:</strong> {{ emp.position }}</p>
+    <p><strong class="label">Departamento:</strong> {{ emp.department?.name || 'Não informado' }}</p>
+    <p><strong class="label">Salário:</strong> {{ formatSalary(emp.salary) }}</p>
+    <p><strong class="label">Data de Admissão:</strong> {{ formatDate(emp.admissionDate) }}</p>
+    <p><strong class="label">Status:</strong> {{ emp.isActive ? 'Ativo' : 'Inativo' }}</p>
+  </div>
+
+  <div class="buttonGroup">
+    <a routerLink="/funcionarios" class="btnSecondary">Voltar</a>
+    <a [routerLink]="['/funcionarios/editar', emp.id]" class="btnPrimary">Editar</a>
+  </div>
+</div>

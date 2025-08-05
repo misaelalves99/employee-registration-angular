@@ -1,0 +1,33 @@
+<!-- src/app/pages/employee-page/reactivate-page/reactivate-page.component.html -->
+
+<div *ngIf="loading" class="loading">Carregando funcionário...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<div *ngIf="!loading && !error && employee" class="reactivate-page">
+  <h2 class="pageTitle">Reativar Funcionário</h2>
+
+  <div class="employeeCard">
+    <h5 class="cardTitle">{{ employee.name }}</h5>
+    <p><strong class="textStrong">CPF:</strong> {{ employee.cpf }}</p>
+    <p><strong class="textStrong">Email:</strong> {{ employee.email }}</p>
+    <p><strong class="textStrong">Cargo:</strong> {{ employee.position }}</p>
+    <p>
+      <strong class="textStrong">Departamento:</strong>
+      {{ employee.department?.name || 'Não informado' }}
+    </p>
+  </div>
+
+  <div class="actions">
+    <button class="button confirm" (click)="handleReactivate()" [disabled]="reactivating">
+      {{ reactivating ? 'Reativando...' : 'Reativar Funcionário' }}
+    </button>
+    <button class="button cancel" (click)="cancel()" [disabled]="reactivating">
+      Cancelar
+    </button>
+  </div>
+</div>
+
+<!-- Fallback caso employee seja null -->
+<div *ngIf="!loading && !error && !employee">
+  <p>Funcionário não encontrado.</p>
+</div>

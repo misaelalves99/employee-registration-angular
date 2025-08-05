@@ -1,0 +1,14 @@
+<!-- src/app/components/modal/modal.component.html -->
+
+<div *ngIf="isOpen" class="overlay" (click)="onClose.emit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h2 class="title">{{ title }}</h2>
+    <div class="body">
+      <ng-content></ng-content>
+    </div>
+    <div class="actions">
+      <button class="buttonCancel" (click)="onClose.emit()">{{ cancelLabel }}</button>
+      <button class="buttonConfirm" (click)="onConfirm.emit()">{{ confirmLabel }}</button>
+    </div>
+  </div>
+</div>

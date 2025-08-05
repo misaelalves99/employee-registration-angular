@@ -1,0 +1,57 @@
+<!-- app/components/employee/employee-list/employee-list.component.html -->
+
+<table class="table">
+  <thead class="thead">
+    <tr>
+      <th class="th">Nome</th>
+      <th class="th">CPF</th>
+      <th class="th">Email</th>
+      <th class="th">Telefone</th>
+      <th class="th">Cargo</th>
+      <th class="th">Departamento</th>
+      <th class="th">Salário</th>
+      <th class="th">Admissão</th>
+      <th class="th">Status</th>
+      <th class="th">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let emp of employees" class="trHover">
+      <td class="td">{{ emp.name }}</td>
+      <td class="td">{{ emp.cpf }}</td>
+      <td class="td">{{ emp.email }}</td>
+      <td class="td">{{ emp.phone }}</td>
+      <td class="td">{{ emp.position }}</td>
+      <td class="td">{{ emp.department?.name ?? '—' }}</td>
+      <td class="td">{{ formatCurrency(emp.salary) }}</td>
+      <td class="td">{{ formatDate(emp.admissionDate) }}</td>
+      <td class="td">{{ emp.isActive ? 'Ativo' : 'Inativo' }}</td>
+      <td class="td actions">
+        <a [routerLink]="['/employee/details', emp.id]" class="btn btnInfo">Detalhes</a>
+        <a [routerLink]="['/employee/edit', emp.id]" class="btn btnWarning">Editar</a>
+
+        <form
+          [attr.action]="'/api/employee/' + (emp.isActive ? 'inactivate' : 'reactivate') + '/' + emp.id"
+          method="POST"
+          class="inline"
+        >
+          <button
+            type="submit"
+            [ngClass]="emp.isActive ? 'btn btnSecondary' : 'btn btnSuccess'"
+            [title]="emp.isActive ? 'Inativar' : 'Ativar'"
+          >
+            {{ emp.isActive ? 'Inativar' : 'Ativar' }}
+          </button>
+        </form>
+
+        <button
+          (click)="onDelete(emp)"
+          class="btn btnDanger"
+          title="Deletar"
+        >
+          Deletar
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
