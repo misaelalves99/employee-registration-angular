@@ -11,12 +11,11 @@ export interface Employee {
   phone?: string;
   address?: string;
   position: Position;
-  department?: Department;
+  department?: Department;       // pode ser undefined
   departmentId?: number | null;
   salary: number;
   admissionDate: string;
   isActive: boolean;
-  // Campos auxiliares opcionais
   departmentName?: string;
   hiredDate?: string;
   active?: boolean;

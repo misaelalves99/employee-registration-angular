@@ -9,6 +9,5 @@ export const mockDepartments: Department[] = [
 ];
 
 export async function getMockDepartments(): Promise<Department[]> {
-  // Simula delay se quiser
   return mockDepartments;
 }

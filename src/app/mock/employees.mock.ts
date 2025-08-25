@@ -34,10 +34,12 @@ export const mockEmployees: Employee[] = [
   },
 ];
 
+// Retorna um employee pelo ID
 export function getEmployeeById(id: number): Employee | null {
   return mockEmployees.find(e => e.id === id) ?? null;
 }
 
+// Retorna todos os employees com campos auxiliares para exibição
 export function getAllMockEmployees(): Employee[] {
   return mockEmployees.map(emp => ({
     ...emp,
@@ -47,6 +49,7 @@ export function getAllMockEmployees(): Employee[] {
   }));
 }
 
+// Atualiza um employee existente
 export function updateMockEmployee(id: number, data: Partial<Employee>): boolean {
   const index = mockEmployees.findIndex(e => e.id === id);
   if (index !== -1) {
@@ -65,11 +68,13 @@ export function updateMockEmployee(id: number, data: Partial<Employee>): boolean
   return false;
 }
 
+// Busca o nome do departamento pelo ID
 function getDepartmentNameById(id: number): string {
   const dep = mockDepartments.find(d => d.id === id);
   return dep ? dep.name : 'Desconhecido';
 }
 
+// Cria um novo employee
 export async function createMockEmployee(newEmployee: Employee): Promise<void> {
   const department = newEmployee.departmentId
     ? {

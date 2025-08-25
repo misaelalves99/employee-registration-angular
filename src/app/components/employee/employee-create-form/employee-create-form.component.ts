@@ -43,7 +43,7 @@ export class EmployeeCreateFormComponent implements OnInit {
       phone: [''],
       address: [''],
       position: ['', Validators.required],
-      departmentId: ['', Validators.required],
+      departmentId: [null, Validators.required], // agora number
       salary: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       admissionDate: ['', Validators.required],
     });

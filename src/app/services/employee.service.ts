@@ -1,6 +1,5 @@
 // src/app/services/employee.service.ts
 
-// src/app/services/employee.service.ts
 import { Injectable } from '@angular/core';
 import { Employee } from '../types/employee.model';
 import { mockEmployees, updateMockEmployee } from '../mock/employees.mock';
