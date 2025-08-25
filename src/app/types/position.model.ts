@@ -10,3 +10,4 @@ export const POSITIONS = [
 
 export type Position = typeof POSITIONS[number];
 export type PositionFormValue = '' | Position;
+export const POSITIONS_MUTABLE: Position[] = [...POSITIONS];

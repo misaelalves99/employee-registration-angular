@@ -1,5 +1,7 @@
 // src/app/mock/employees.mock.ts
 
+// src/app/mock/employees.mock.ts
+
 import { Employee } from '../types/employee.model';
 import { mockDepartments } from './departments.mock';
 
@@ -39,7 +41,7 @@ export function getEmployeeById(id: number): Employee | null {
   return mockEmployees.find(e => e.id === id) ?? null;
 }
 
-// Retorna todos os employees com campos auxiliares para exibição
+// Retorna todos os employees com campos auxiliares
 export function getAllMockEmployees(): Employee[] {
   return mockEmployees.map(emp => ({
     ...emp,
@@ -53,43 +55,44 @@ export function getAllMockEmployees(): Employee[] {
 export function updateMockEmployee(id: number, data: Partial<Employee>): boolean {
   const index = mockEmployees.findIndex(e => e.id === id);
   if (index !== -1) {
+    // Garantir department correto
+    const department =
+      data.departmentId != null
+        ? mockDepartments.find(d => d.id === data.departmentId)
+        : undefined;
+
     mockEmployees[index] = {
       ...mockEmployees[index],
       ...data,
-      department: data.departmentId
-        ? {
-            id: data.departmentId,
-            name: getDepartmentNameById(data.departmentId),
-          }
-        : mockEmployees[index].department,
+      department,
+      departmentId: department?.id ?? undefined,
     };
     return true;
   }
   return false;
 }
 
-// Busca o nome do departamento pelo ID
-function getDepartmentNameById(id: number): string {
-  const dep = mockDepartments.find(d => d.id === id);
-  return dep ? dep.name : 'Desconhecido';
-}
-
 // Cria um novo employee
 export async function createMockEmployee(newEmployee: Employee): Promise<void> {
-  const department = newEmployee.departmentId
-    ? {
-        id: newEmployee.departmentId,
-        name: getDepartmentNameById(newEmployee.departmentId),
-      }
-    : undefined;
+  const department =
+    newEmployee.departmentId != null
+      ? mockDepartments.find(d => d.id === newEmployee.departmentId)
+      : undefined;
 
   mockEmployees.push({
     ...newEmployee,
     department,
+    departmentId: department?.id ?? undefined,
   });
 
   console.log('Funcionário criado:', {
     ...newEmployee,
     departmentName: department?.name ?? '-',
   });
+}
+
+// Busca o nome do departamento pelo ID
+function getDepartmentNameById(id: number): string {
+  const dep = mockDepartments.find(d => d.id === id);
+  return dep ? dep.name : 'Desconhecido';
 }

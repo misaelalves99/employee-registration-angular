@@ -11,8 +11,8 @@ export interface Employee {
   phone?: string;
   address?: string;
   position: Position;
-  department?: Department;       // pode ser undefined
-  departmentId?: number | null;
+  department?: Department;
+  departmentId?: number;
   salary: number;
   admissionDate: string;
   isActive: boolean;
@@ -21,6 +21,7 @@ export interface Employee {
   active?: boolean;
 }
 
+// Filtros
 export interface Filters {
   departmentId: string;
   position: string;

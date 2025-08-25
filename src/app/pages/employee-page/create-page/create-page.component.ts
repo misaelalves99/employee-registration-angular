@@ -1,19 +1,19 @@
 // src/app/pages/employee-page/create-page/create-page.component.ts
 
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common'; // Import CommonModule
-import { FormsModule } from '@angular/forms'; // Import FormsModule
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Department } from '../../../types/department.model';
-import { Position } from '../../../types/position.model';
+import { Position, POSITIONS_MUTABLE } from '../../../types/position.model';
 import { createMockEmployee } from '../../../mock/employees.mock';
 import { getMockDepartments } from '../../../mock/departments.mock';
-import { getMockPositions } from '../../../mock/positions.mock';
+import { EmployeeForm } from '../../../types/employee-form.model';
 
 @Component({
   selector: 'app-create-employee-page',
-  standalone: true, // <-- MARCADO COMO STANDALONE
-  imports: [CommonModule, FormsModule], // <-- IMPORTA SEUS PRÓPRIOS MÓDULOS
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './create-page.component.html',
   styleUrls: ['./create-page.component.css'],
 })
@@ -21,50 +21,87 @@ export class CreatePageComponent implements OnInit {
   departments: Department[] = [];
   positions: Position[] = [];
   loading = true;
+  errors: string[] = [];
 
-  formData = {
+  // Inicializa formData com os mesmos campos do EmployeeForm
+  formData: EmployeeForm = {
+    id: 0,
     name: '',
     cpf: '',
-    salary: '',
-    isActive: true,
-    departmentId: '',
+    email: '',
+    phone: '',
+    address: '',
     position: '' as Position,
+    departmentId: undefined, // Changed from null to undefined for consistency
+    salary: 0,
+    admissionDate: new Date().toISOString().slice(0, 10),
+    isActive: true,
   };
+
+  textFields: (keyof Pick<EmployeeForm, 'name' | 'cpf' | 'email' | 'phone' | 'address'>)[] = [
+    'name',
+    'cpf',
+    'email',
+    'phone',
+    'address',
+  ];
 
   constructor(private router: Router) {}
 
-  async ngOnInit() {
-    const [deps, pos] = await Promise.all([
-      getMockDepartments(),
-      getMockPositions(),
-    ]);
+  async ngOnInit(): Promise<void> {
+    const [deps, pos] = await Promise.all([getMockDepartments(), Promise.resolve(POSITIONS_MUTABLE)]);
     this.departments = deps;
     this.positions = pos;
     this.loading = false;
   }
 
-  async handleSubmit() {
-    // Basic validation for demonstration, consider using Reactive Forms for robust validation
-    if (!this.formData.name || !this.formData.cpf || !this.formData.salary || !this.formData.departmentId || !this.formData.position) {
-      alert('Por favor, preencha todos os campos obrigatórios.');
+  async handleSubmit(): Promise<void> {
+    // Validação básica
+    if (
+      !this.formData.name ||
+      !this.formData.cpf ||
+      !this.formData.email ||
+      !this.formData.salary ||
+      !this.formData.position
+    ) {
+      console.error('Por favor, preencha todos os campos obrigatórios.'); // Changed alert to console.error
+      this.errors = ['Por favor, preencha todos os campos obrigatórios.'];
       return;
     }
 
+    // Find the department object if departmentId is set
+    const department = this.formData.departmentId
+      ? this.departments.find((d) => d.id === this.formData.departmentId)
+      : undefined;
+
     await createMockEmployee({
-      id: Date.now(), // Generate a unique ID
-      name: this.formData.name,
-      cpf: this.formData.cpf,
-      salary: parseFloat(this.formData.salary),
-      position: this.formData.position,
-      departmentId: parseInt(this.formData.departmentId),
-      department: this.departments.find(
-        (d) => d.id === parseInt(this.formData.departmentId)
-      ),
-      email: 'default@example.com', // Add default or collect from form
-      admissionDate: new Date().toISOString(),
-      isActive: this.formData.isActive,
+      ...this.formData,
+      id: Date.now(), // gera ID único
+      department: department,
     });
-    alert('Funcionário criado com sucesso!');
-    this.router.navigate(['/funcionarios']); // Navigate to the employees list page
+
+    console.log('Funcionário criado com sucesso!'); // Changed alert to console.log
+    this.router.navigate(['/funcionarios']);
+  }
+
+  isOptional(field: string): boolean {
+    return field === 'phone' || field === 'address';
+  }
+
+  getLabel(field: keyof EmployeeForm): string {
+    const labels: Record<keyof EmployeeForm, string> = {
+      id: 'ID',
+      name: 'Nome',
+      cpf: 'CPF',
+      email: 'Email',
+      phone: 'Telefone',
+      address: 'Endereço',
+      position: 'Cargo',
+      departmentId: 'Departamento',
+      salary: 'Salário',
+      admissionDate: 'Data de Admissão',
+      isActive: 'Status',
+    };
+    return labels[field] || field;
   }
 }
