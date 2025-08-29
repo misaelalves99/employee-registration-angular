@@ -15,7 +15,7 @@
           type="text"
           [value]="query"
           (input)="onQueryChange($event)"
-          placeholder="Buscar por nome, CPF, e-mail ou telefone..."
+          placeholder="Buscar por nome, e-mail ou telefone..."
           class="searchInput"
         />
       </div>
@@ -26,10 +26,8 @@
         <thead class="thead">
           <tr>
             <th class="th">Nome</th>
-            <th class="th">CPF</th>
             <th class="th">Cargo</th>
             <th class="th">Departamento</th>
-            <th class="th">Admissão</th>
             <th class="th">Status</th>
             <th class="th">Ações</th>
           </tr>
@@ -37,10 +35,8 @@
         <tbody>
           <tr *ngFor="let emp of employees" class="trHover">
             <td class="td">{{ emp.name }}</td>
-            <td class="td">{{ emp.cpf }}</td>
             <td class="td">{{ emp.position }}</td>
             <td class="td">{{ emp.department?.name || '-' }}</td>
-            <td class="td">{{ emp.admissionDate | date: 'shortDate' }}</td>
             <td class="td">{{ emp.isActive ? 'Ativo' : 'Inativo' }}</td>
             <td class="td actions">
               <a [routerLink]="['/funcionarios/detalhes', emp.id]" class="btn btnInfo">Detalhes</a>

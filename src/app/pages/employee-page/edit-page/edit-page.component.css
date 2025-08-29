@@ -1,36 +1,56 @@
-/* src/app/employee/edit-page/edit-page.component.css */
+/* src/app/pages/employee-page/edit-page/edit-page.component.css */
 
+/* Container principal */
 .container {
-  max-width: 32rem;
-  margin: 0 auto;
-  padding: 1.5rem 1rem;
-  font-family: 'Inter', sans-serif;
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #2c3e50;
+}
+
+/* Título */
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
   color: #1f2937;
 }
 
-.title {
-  font-size: 1.875rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  user-select: none;
-}
-
+/* Mensagens de erro */
 .errorContainer {
   margin-bottom: 1rem;
-  color: #dc2626;
-  font-weight: 600;
+  padding: 1rem;
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
 }
 
 .errorText {
-  margin: 0.25rem 0;
+  color: #b91c1c;
+  margin: 0;
+  font-size: 0.95rem;
 }
 
+/* Loading */
+.loading {
+  text-align: center;
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+/* Formulário */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
+/* Campos do formulário */
 .field {
   display: flex;
   flex-direction: column;
@@ -38,101 +58,102 @@
 
 .label {
   font-weight: 600;
-  margin-bottom: 0.25rem;
-  user-select: none;
+  margin-bottom: 0.5rem;
+  color: #374151;
 }
 
 .input,
-.select {
-  padding: 0.5rem 0.75rem;
+select {
+  padding: 0.65rem 0.85rem;
   border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  font-size: 1rem;
-  transition: border-color 0.2s ease;
-  background-color: white;
-  appearance: none; /* Remove estilo padrão do select */
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input:focus,
-.select:focus {
+select:focus {
   outline: none;
   border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
-.select {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  font-size: 1rem;
-  transition: border-color 0.2s ease;
-  background-color: white;
-
-  /* Mantém a seta nativa */
-  -webkit-appearance: menulist; /* Chrome, Safari */
-  -moz-appearance: menulist;    /* Firefox */
-  appearance: menulist;         /* padrão */
-}
-
-.select:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
-}
-
+/* Checkbox */
 .checkboxContainer {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-weight: 600;
 }
 
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.checkboxLabel input {
+  width: 18px;
+  height: 18px;
+  accent-color: #2563eb;
+}
+
+/* Botões */
 .buttons {
   display: flex;
   gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
 }
 
 .btn {
-  flex: 1;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: 10px;
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  border: none;
+  transition: background 0.2s ease-in-out, transform 0.1s ease;
+  text-decoration: none;
   text-align: center;
-  transition: background-color 0.2s ease;
+  border: none;
 }
 
 .btnPrimary {
   background-color: #2563eb;
-  color: white;
+  color: #ffffff;
 }
 
 .btnPrimary:hover {
   background-color: #1d4ed8;
+  transform: translateY(-1px);
 }
 
 .btnSecondary {
-  background-color: #9ca3af;
-  color: white;
-  text-decoration: none;
-  display: inline-block;
-  text-align: center;
+  background-color: #e5e7eb;
+  color: #1f2937;
 }
 
 .btnSecondary:hover {
-  background-color: #6b7280;
+  background-color: #d1d5db;
+  transform: translateY(-1px);
 }
 
-/* Setas do select alinhadas à direita */
-.select {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-down'%3E%3Cpolyline points='6 8 10 12 14 8'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.5rem center;
-  background-size: 1rem;
-}
+/* Responsividade */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    margin: 1rem;
+  }
 
-/* Garantir consistência visual */
-.field select {
-  width: 100%;
+  .form {
+    gap: 1rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
 }
