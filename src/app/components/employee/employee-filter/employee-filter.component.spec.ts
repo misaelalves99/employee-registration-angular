@@ -35,7 +35,7 @@ describe('EmployeeFilterComponent', () => {
     expect(formValue.admissionDateTo).toBe('');
   });
 
-  it('deve emitir filterChange com dados corretos ao submeter formulário', () => {
+  it('deve emitir filterChange com dados corretos ao submeter formulário preenchido', () => {
     spyOn(component.filterChange, 'emit');
 
     component.filterForm.setValue({
@@ -59,7 +59,7 @@ describe('EmployeeFilterComponent', () => {
     });
   });
 
-  it('deve emitir filterChange com undefined para valores vazios', () => {
+  it('deve emitir filterChange com undefined para campos vazios', () => {
     spyOn(component.filterChange, 'emit');
 
     component.filterForm.setValue({
@@ -81,6 +81,17 @@ describe('EmployeeFilterComponent', () => {
       admissionDateFrom: undefined,
       admissionDateTo: undefined,
     });
+  });
+
+  it('deve emitir filterChange com isActive false corretamente', () => {
+    spyOn(component.filterChange, 'emit');
+
+    component.filterForm.patchValue({ isActive: 'false' });
+    component.onSubmit();
+
+    expect(component.filterChange.emit).toHaveBeenCalledWith(
+      jasmine.objectContaining({ isActive: false })
+    );
   });
 
   it('deve emitir filterChange vazio ao resetar o formulário', () => {

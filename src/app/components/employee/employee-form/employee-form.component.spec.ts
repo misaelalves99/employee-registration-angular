@@ -59,7 +59,29 @@ describe('EmployeeFormComponent', () => {
     };
     const valid = component.validate();
     expect(valid).toBeFalse();
-    expect(Object.keys(component.errors).length).toBeGreaterThan(0);
+    expect(component.errors.name).toBe('Nome é obrigatório.');
+    expect(component.errors.salary).toBe('Salário é obrigatório.');
+  });
+
+  it('deve validar salary inválido negativo ou não numérico', () => {
+    component.formData.salary = '-100';
+    component.formData.name = 'Teste';
+    component.formData.cpf = '123';
+    component.formData.email = 'teste@email.com';
+    component.formData.phone = '123';
+    component.formData.address = 'Rua';
+    component.formData.position = POSITIONS[0] as any;
+    component.formData.departmentId = '1';
+    component.formData.admissionDate = '2025-01-01';
+    
+    const valid = component.validate();
+    expect(valid).toBeFalse();
+    expect(component.errors.salary).toBe('Salário deve ser um número positivo.');
+
+    component.formData.salary = 'abc';
+    const valid2 = component.validate();
+    expect(valid2).toBeFalse();
+    expect(component.errors.salary).toBe('Salário deve ser um número positivo.');
   });
 
   it('deve validar corretamente e retornar verdadeiro com dados preenchidos', () => {

@@ -12,7 +12,7 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomeComponent, CommonModule, RouterModule]
+      imports: [HomeComponent, CommonModule, RouterModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
@@ -31,6 +31,14 @@ describe('HomeComponent', () => {
 
   it('should render the description paragraph correctly', () => {
     const p = fixture.debugElement.query(By.css('p.description')).nativeElement;
-    expect(p.textContent).toContain('Este sistema permite o cadastro, edição e gerenciamento de funcionários da empresa');
+    expect(p.textContent).toContain(
+      'Este sistema permite o cadastro, edição e gerenciamento de funcionários da empresa'
+    );
+  });
+
+  it('should have a routerLink to /employee', () => {
+    const link = fixture.debugElement.query(By.css('a.btnPrimary')).nativeElement;
+    expect(link.getAttribute('routerLink')).toBe('/employee');
+    expect(link.textContent).toContain('Ver Funcionários');
   });
 });

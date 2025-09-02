@@ -79,4 +79,47 @@ describe('EmployeeFilterFormComponent', () => {
       jasmine.objectContaining({ admissionDateTo: '2025-12-31' })
     );
   });
+
+  it('deve preservar valores anteriores ao alterar múltiplos campos', () => {
+    spyOn(component.filtersChange, 'emit');
+
+    component.filters = {
+      departmentId: '1',
+      position: POSITIONS[1],
+      isActive: 'false',
+      admissionDateFrom: '2025-01-01',
+      admissionDateTo: '2025-12-31'
+    };
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector('#departmentId') as HTMLInputElement;
+    input.value = '2';
+    input.dispatchEvent(new Event('input'));
+
+    expect(component.filtersChange.emit).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        departmentId: '2',
+        position: POSITIONS[1],
+        isActive: 'false',
+        admissionDateFrom: '2025-01-01',
+        admissionDateTo: '2025-12-31'
+      })
+    );
+  });
+
+  it('deve emitir corretamente quando campos forem limpos', () => {
+    spyOn(component.filtersChange, 'emit');
+
+    const input = fixture.nativeElement.querySelector('#departmentId') as HTMLInputElement;
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+
+    const select = fixture.nativeElement.querySelector('#position') as HTMLSelectElement;
+    select.value = '';
+    select.dispatchEvent(new Event('change'));
+
+    expect(component.filtersChange.emit).toHaveBeenCalledWith(
+      jasmine.objectContaining({ departmentId: '', position: '' })
+    );
+  });
 });

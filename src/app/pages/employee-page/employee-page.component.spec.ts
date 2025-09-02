@@ -9,6 +9,7 @@ import { EmployeeFilterComponent } from '../../components/employee/employee-filt
 import { EmployeeDeleteModalComponent } from '../../components/employee/employee-delete-modal/employee-delete-modal.component';
 import { mockEmployees } from '../../mock/employees.mock';
 import { By } from '@angular/platform-browser';
+import { Employee } from '../../types/employee.model';
 
 describe('EmployeePageComponent', () => {
   let component: EmployeePageComponent;
@@ -43,7 +44,12 @@ describe('EmployeePageComponent', () => {
   it('onQueryChange should filter employees by query', () => {
     const inputEvent = { target: { value: 'joao' } } as unknown as Event;
     component.onQueryChange(inputEvent);
-    expect(component.employees.every(emp => emp.name.toLowerCase().includes('joao') || emp.email.toLowerCase().includes('joao'))).toBeTrue();
+    expect(component.employees.every(emp =>
+      emp.name.toLowerCase().includes('joao') ||
+      emp.email.toLowerCase().includes('joao') ||
+      emp.cpf.includes('joao') ||
+      (emp.phone?.includes('joao') ?? false)
+    )).toBeTrue();
   });
 
   it('onFilterChange should apply filters', () => {
@@ -52,7 +58,7 @@ describe('EmployeePageComponent', () => {
   });
 
   it('openDeleteModal should set selectedEmployeeToDelete', () => {
-    const emp = mockEmployees[0];
+    const emp: Employee = mockEmployees[0];
     component.openDeleteModal(emp);
     expect(component.selectedEmployeeToDelete).toEqual(emp);
   });
@@ -94,5 +100,20 @@ describe('EmployeePageComponent', () => {
     fixture.detectChanges();
     const msg = fixture.debugElement.query(By.css('.noResults')).nativeElement;
     expect(msg.textContent).toContain('Nenhum funcionário encontrado.');
+  });
+
+  it('should update employees list after deleting', () => {
+    spyOn(window, 'alert');
+    const emp = mockEmployees[0];
+    component.openDeleteModal(emp);
+    component.confirmDelete();
+    expect(component.employees.find(e => e.id === emp.id)).toBeUndefined();
+  });
+
+  it('should update employees list after toggling active status', () => {
+    const emp = mockEmployees[0];
+    const originalStatus = emp.isActive;
+    component.toggleActiveStatus(emp);
+    expect(component.employees.find(e => e.id === emp.id)?.isActive).toBe(!originalStatus);
   });
 });

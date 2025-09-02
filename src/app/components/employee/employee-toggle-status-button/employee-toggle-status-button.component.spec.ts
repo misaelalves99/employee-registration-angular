@@ -54,6 +54,20 @@ describe('EmployeeToggleStatusButtonComponent', () => {
     expect(button.textContent).toContain('Carregando...');
   });
 
+  it('deve aplicar classes CSS e título corretos', () => {
+    component.isActive = true;
+    fixture.detectChanges();
+    let button = fixture.debugElement.query(By.css('button')).nativeElement as HTMLButtonElement;
+    expect(button.className).toContain('inactive');
+    expect(button.getAttribute('title')).toBe('Inativar Funcionário');
+
+    component.isActive = false;
+    fixture.detectChanges();
+    button = fixture.debugElement.query(By.css('button')).nativeElement as HTMLButtonElement;
+    expect(button.className).toContain('active');
+    expect(button.getAttribute('title')).toBe('Ativar Funcionário');
+  });
+
   it('deve fazer POST para inativar funcionário e emitir onToggle', () => {
     spyOn(component.onToggle, 'emit');
 
@@ -92,6 +106,7 @@ describe('EmployeeToggleStatusButtonComponent', () => {
 
   it('deve exibir alerta em caso de erro', () => {
     spyOn(window, 'alert');
+
     component.employeeId = 3;
     component.isActive = true;
     fixture.detectChanges();

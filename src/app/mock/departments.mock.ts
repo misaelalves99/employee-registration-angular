@@ -1,6 +1,5 @@
 // src/app/mock/departments.mock.ts
 
-// src/app/mock/departments.mock.ts
 import { Department } from '../types/department.model';
 
 export const mockDepartments: Department[] = [

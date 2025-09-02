@@ -19,7 +19,7 @@ describe('DeleteComponent', () => {
     email: 'joao@example.com',
     phone: '(11) 99999-9999',
     address: 'Rua A, 123',
-    position: 'Desenvolvedor', // agora é do tipo Position válido
+    position: 'Desenvolvedor',
     department: { id: 1, name: 'TI' },
     departmentId: 1,
     salary: 5500,
@@ -83,6 +83,18 @@ describe('DeleteComponent', () => {
 
     expect(mockData.deleteMockEmployee).not.toHaveBeenCalled();
     expect(window.alert).not.toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('handleDelete trata erro ao deletar funcionário', () => {
+    spyOn(window, 'confirm').and.returnValue(true);
+    spyOn(window, 'alert');
+    component.employee = mockEmployee;
+    (mockData.deleteMockEmployee as jasmine.Spy).and.throwError('Falha');
+
+    component.handleDelete();
+
+    expect(component.error).toBe('Erro ao deletar funcionário. Tente novamente.');
     expect(router.navigate).not.toHaveBeenCalled();
   });
 

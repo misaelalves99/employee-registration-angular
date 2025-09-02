@@ -48,6 +48,15 @@ describe('ModalComponent', () => {
     expect(component.onClose.emit).toHaveBeenCalled();
   });
 
+  it('não deve propagar click do modal interno', () => {
+    component.isOpen = true;
+    fixture.detectChanges();
+    spyOn(component.onClose, 'emit');
+    const modalInner = fixture.debugElement.query(By.css('.modal'));
+    modalInner.triggerEventHandler('click', { stopPropagation: () => {} });
+    expect(component.onClose.emit).not.toHaveBeenCalled();
+  });
+
   it('deve emitir onClose ao clicar no botão cancelar', () => {
     component.isOpen = true;
     fixture.detectChanges();
@@ -77,5 +86,17 @@ describe('ModalComponent', () => {
 
     expect(cancelBtn.textContent).toContain('Não');
     expect(confirmBtn.textContent).toContain('Sim');
+  });
+
+  it('deve renderizar conteúdo passado via ng-content', () => {
+    component.isOpen = true;
+    fixture.detectChanges();
+
+    const content = document.createElement('span');
+    content.textContent = 'Conteúdo do Modal';
+    fixture.nativeElement.querySelector('.body').appendChild(content);
+
+    const bodyEl = fixture.debugElement.query(By.css('.body')).nativeElement;
+    expect(bodyEl.textContent).toContain('Conteúdo do Modal');
   });
 });

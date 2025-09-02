@@ -30,8 +30,8 @@ describe('EmployeeListComponent', () => {
       email: 'maria@email.com',
       phone: '22222222',
       position: 'Analista',
-      department: undefined, // department agora undefined
-      departmentId: null,
+      department: undefined,
+      departmentId: 2,
       salary: 1500,
       admissionDate: '2024-12-01',
       isActive: false,
@@ -84,5 +84,23 @@ describe('EmployeeListComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const secondRowCells = compiled.querySelectorAll('tbody tr')[1].querySelectorAll('td');
     expect(secondRowCells[5].textContent).toContain('—');
+  });
+
+  it('deve exibir botão correto de ativar/inativar com classes corretas', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const firstRowBtn = compiled.querySelectorAll('tbody tr')[0].querySelector('form button')!;
+    expect(firstRowBtn.textContent).toContain('Inativar');
+    expect(firstRowBtn.className).toContain('btnSecondary');
+
+    const secondRowBtn = compiled.querySelectorAll('tbody tr')[1].querySelector('form button')!;
+    expect(secondRowBtn.textContent).toContain('Ativar');
+    expect(secondRowBtn.className).toContain('btnSuccess');
+  });
+
+  it('deve ter links de detalhes e edição corretos', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const firstRowLinks = compiled.querySelectorAll('tbody tr')[0].querySelectorAll('a');
+    expect(firstRowLinks[0].getAttribute('ng-reflect-router-link')).toBe('/employee/details,1');
+    expect(firstRowLinks[1].getAttribute('ng-reflect-router-link')).toBe('/employee/edit,1');
   });
 });

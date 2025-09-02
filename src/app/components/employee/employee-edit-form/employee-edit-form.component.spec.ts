@@ -16,7 +16,7 @@ describe('EmployeeEditFormComponent', () => {
     email: 'joao@email.com',
     phone: '12345678',
     address: 'Rua A',
-    position: 'Desenvolvedor' as Position, // Tipo correto
+    position: 'Desenvolvedor' as Position,
     departmentId: 1,
     salary: 2500.5,
     admissionDate: '2025-08-21',
@@ -51,7 +51,7 @@ describe('EmployeeEditFormComponent', () => {
     expect(formValue.cpf).toBe(mockEmployee.cpf);
     expect(formValue.email).toBe(mockEmployee.email);
     expect(formValue.position).toBe(mockEmployee.position);
-    expect(Number(formValue.departmentId)).toBe(mockEmployee.departmentId); // número
+    expect(Number(formValue.departmentId)).toBe(mockEmployee.departmentId);
     expect(Number(formValue.salary)).toBe(mockEmployee.salary);
   });
 
@@ -81,20 +81,26 @@ describe('EmployeeEditFormComponent', () => {
     expect(component.getError('salary')).toBe('Valor inválido.');
   });
 
-  it('deve emitir update com FormData ao submeter formulário válido', () => {
-    // Espiando o EventEmitter corretamente
-    const emitSpy = spyOn(component.update, 'emit');
+  it('deve permitir preenchimento de campos opcionais sem erros', () => {
+    component.form.patchValue({
+      phone: '99999999',
+      address: 'Rua B',
+    });
+    expect(component.getError('phone')).toBeNull();
+    expect(component.getError('address')).toBeNull();
+  });
 
+  it('deve emitir update com FormData ao submeter formulário válido', () => {
+    const emitSpy = spyOn(component.update, 'emit');
     component.onSubmit();
 
     expect(emitSpy).toHaveBeenCalled();
 
-    // Pega o primeiro argumento do primeiro chamado
     const formDataArg = emitSpy.calls.mostRecent().args[0] as FormData;
-
     expect(formDataArg.get('name')).toBe(component.employee.name);
     expect(formDataArg.get('cpf')).toBe(component.employee.cpf);
     expect(formDataArg.get('email')).toBe(component.employee.email);
+    expect(formDataArg.get('departmentId')).toBe(String(component.employee.departmentId));
   });
 
   it('não deve emitir update se formulário for inválido', () => {

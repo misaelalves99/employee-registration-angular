@@ -11,6 +11,7 @@ describe('EmployeeDetailsComponent', () => {
   let component: EmployeeDetailsComponent;
   let fixture: ComponentFixture<EmployeeDetailsComponent>;
   let employeeServiceSpy: jasmine.SpyObj<EmployeeService>;
+  let activatedRouteSpy: jasmine.SpyObj<ActivatedRoute>;
 
   const mockEmployee: Employee = {
     id: 1,
@@ -28,26 +29,28 @@ describe('EmployeeDetailsComponent', () => {
   };
 
   beforeEach(async () => {
-    const spy = jasmine.createSpyObj('EmployeeService', ['getEmployeeById']);
+    const spyEmployee = jasmine.createSpyObj('EmployeeService', ['getEmployeeById']);
+    const spyRoute = jasmine.createSpyObj('ActivatedRoute', [], { snapshot: { paramMap: { get: () => '1' } } });
 
     await TestBed.configureTestingModule({
       imports: [EmployeeDetailsComponent, CommonModule, RouterModule],
       providers: [
-        { provide: EmployeeService, useValue: spy },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } } } }
+        { provide: EmployeeService, useValue: spyEmployee },
+        { provide: ActivatedRoute, useValue: spyRoute }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(EmployeeDetailsComponent);
     component = fixture.componentInstance;
     employeeServiceSpy = TestBed.inject(EmployeeService) as jasmine.SpyObj<EmployeeService>;
+    activatedRouteSpy = TestBed.inject(ActivatedRoute) as jasmine.SpyObj<ActivatedRoute>;
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit should load employee when id is valid', () => {
+  it('ngOnInit deve carregar funcionário quando id é válido', () => {
     employeeServiceSpy.getEmployeeById.and.returnValue(mockEmployee);
 
     component.ngOnInit();
@@ -56,7 +59,7 @@ describe('EmployeeDetailsComponent', () => {
     expect(component.notFound).toBeFalse();
   });
 
-  it('ngOnInit should set notFound when employee is not found', () => {
+  it('ngOnInit deve setar notFound quando funcionário não encontrado', () => {
     employeeServiceSpy.getEmployeeById.and.returnValue(null);
 
     component.ngOnInit();
@@ -65,9 +68,8 @@ describe('EmployeeDetailsComponent', () => {
     expect(component.notFound).toBeTrue();
   });
 
-  it('ngOnInit should set notFound when id is NaN', () => {
-    const route = TestBed.inject(ActivatedRoute);
-    spyOn(route.snapshot.paramMap, 'get').and.returnValue('invalid');
+  it('ngOnInit deve setar notFound quando id é inválido (NaN)', () => {
+    spyOn(activatedRouteSpy.snapshot.paramMap, 'get').and.returnValue('invalid');
 
     component.ngOnInit();
 
@@ -75,12 +77,12 @@ describe('EmployeeDetailsComponent', () => {
     expect(component.notFound).toBeTrue();
   });
 
-  it('formatSalary should format number as BRL currency', () => {
+  it('formatSalary deve formatar número como moeda BRL', () => {
     const formatted = component.formatSalary(5500);
     expect(formatted).toBe('R$ 5.500,00');
   });
 
-  it('formatDate should format date string as pt-BR', () => {
+  it('formatDate deve formatar string de data para pt-BR', () => {
     const formatted = component.formatDate('2022-01-15');
     expect(formatted).toBe(new Date('2022-01-15').toLocaleDateString('pt-BR'));
   });

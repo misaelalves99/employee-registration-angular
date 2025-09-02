@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import * as employeeMock from '../../../mock/employees.mock';
 import * as departmentsMock from '../../../mock/departments.mock';
 import { EmployeeForm } from '../../../types/employee-form.model';
+import { Department } from '../../../types/department.model';
+import { Position, POSITIONS_MUTABLE } from '../../../types/position.model';
 
 describe('EditComponent', () => {
   let component: EditComponent;
@@ -28,19 +30,21 @@ describe('EditComponent', () => {
     isActive: true,
   };
 
+  const mockDepartments: Department[] = [{ id: 1, name: 'TI' }];
+
   beforeEach(async () => {
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     spyOn(employeeMock, 'getEmployeeById').and.returnValue(mockEmployee);
     spyOn(employeeMock, 'updateMockEmployee').and.returnValue(true);
-    spyOn(departmentsMock, 'getMockDepartments').and.returnValue(Promise.resolve([{ id: 1, name: 'TI' }]));
+    spyOn(departmentsMock, 'getMockDepartments').and.returnValue(Promise.resolve(mockDepartments));
 
     await TestBed.configureTestingModule({
       imports: [EditComponent, CommonModule, FormsModule, RouterModule],
       providers: [
         { provide: Router, useValue: routerSpy },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } } } }
-      ]
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } } } },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EditComponent);
@@ -52,15 +56,17 @@ describe('EditComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit should load employee and departments', fakeAsync(() => {
-    tick(); // simula a resolução da promise de departamentos
+  it('ngOnInit deve carregar employee e departments', fakeAsync(() => {
+    component.ngOnInit();
+    tick();
 
-    expect(component.employee).toEqual(mockEmployee);
-    expect(component.departments.length).toBe(1);
+    expect(component.employee).toEqual(jasmine.objectContaining(mockEmployee));
+    expect(component.departments).toEqual(mockDepartments);
+    expect(component.positions).toEqual(POSITIONS_MUTABLE);
     expect(component.loading).toBeFalse();
   }));
 
-  it('ngOnInit should set error if employee not found', fakeAsync(() => {
+  it('ngOnInit deve setar erro se funcionário não encontrado', fakeAsync(() => {
     (employeeMock.getEmployeeById as jasmine.Spy).and.returnValue(null);
     const comp2 = TestBed.createComponent(EditComponent).componentInstance;
     comp2.ngOnInit();
@@ -71,15 +77,22 @@ describe('EditComponent', () => {
     expect(comp2.loading).toBeFalse();
   }));
 
-  it('onSubmit should update employee and navigate on success', () => {
+  it('onSubmit atualiza funcionário e navega em sucesso', () => {
     component.employee = { ...mockEmployee };
     component.onSubmit();
 
-    expect(employeeMock.updateMockEmployee).toHaveBeenCalledWith(mockEmployee.id, mockEmployee);
+    expect(employeeMock.updateMockEmployee).toHaveBeenCalledWith(
+      mockEmployee.id,
+      jasmine.objectContaining({
+        ...mockEmployee,
+        department: mockDepartments[0],
+        departmentId: 1,
+      })
+    );
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/funcionarios']);
   });
 
-  it('onSubmit should set error if update fails', () => {
+  it('onSubmit define erro se atualização falhar', () => {
     (employeeMock.updateMockEmployee as jasmine.Spy).and.returnValue(false);
     component.employee = { ...mockEmployee };
     component.onSubmit();
@@ -87,18 +100,19 @@ describe('EditComponent', () => {
     expect(component.errors).toContain('Erro ao salvar dados do funcionário.');
   });
 
-  it('isOptional should return true for phone and address', () => {
+  it('isOptional retorna true para phone e address', () => {
     expect(component.isOptional('phone')).toBeTrue();
     expect(component.isOptional('address')).toBeTrue();
     expect(component.isOptional('name')).toBeFalse();
   });
 
-  it('getLabel should return correct label for fields', () => {
+  it('getLabel retorna labels corretos', () => {
     expect(component.getLabel('name')).toBe('Nome');
     expect(component.getLabel('cpf')).toBe('CPF');
     expect(component.getLabel('email')).toBe('Email');
     expect(component.getLabel('phone')).toBe('Telefone');
     expect(component.getLabel('address')).toBe('Endereço');
     expect(component.getLabel('position')).toBe('Cargo');
+    expect(component.getLabel('salary')).toBe('Salário');
   });
 });

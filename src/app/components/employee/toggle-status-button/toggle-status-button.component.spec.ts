@@ -77,8 +77,26 @@ describe('ToggleStatusButtonComponent', () => {
   it('deve atualizar botão de loading no template', waitForAsync(() => {
     component.loading = true;
     fixture.detectChanges();
+
     const button = fixture.debugElement.query(By.css('button')).nativeElement as HTMLButtonElement;
     expect(button.disabled).toBeTrue();
     expect(button.textContent).toContain('Carregando...');
   }));
+
+  it('deve renderizar texto correto do botão quando ativo e inativo', () => {
+    component.initialStatus = true;
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    let button = fixture.debugElement.query(By.css('button')).nativeElement as HTMLButtonElement;
+    expect(button.textContent).toContain('Ativo');
+    expect(button.title).toBe('Inativar');
+
+    component.isActive = false;
+    fixture.detectChanges();
+
+    button = fixture.debugElement.query(By.css('button')).nativeElement as HTMLButtonElement;
+    expect(button.textContent).toContain('Inativo');
+    expect(button.title).toBe('Ativar');
+  });
 });

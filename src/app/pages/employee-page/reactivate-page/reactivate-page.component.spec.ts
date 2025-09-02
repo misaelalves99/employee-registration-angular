@@ -20,7 +20,7 @@ describe('ReactivateComponent', () => {
     email: 'joao@example.com',
     phone: '(11) 99999-9999',
     address: 'Rua A, 123',
-    position: 'Desenvolvedor', // valor válido de Position
+    position: 'Desenvolvedor',
     departmentId: 1,
     department: { id: 1, name: 'TI' },
     salary: 5500,
@@ -59,13 +59,13 @@ describe('ReactivateComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit should load employee', () => {
+  it('ngOnInit deve carregar employee', () => {
     expect(component.employee).toEqual(mockEmployee);
     expect(component.loading).toBeFalse();
     expect(component.error).toBeNull();
   });
 
-  it('ngOnInit should set error if ID invalid', () => {
+  it('ngOnInit deve setar erro se ID inválido', () => {
     const fixture2 = createComponentWithRouteId('abc');
     const comp2 = fixture2.componentInstance;
     fixture2.detectChanges();
@@ -77,9 +77,8 @@ describe('ReactivateComponent', () => {
     expect(comp2.loading).toBeFalse();
   });
 
-  it('ngOnInit should set error if employee not found', () => {
+  it('ngOnInit deve setar erro se employee não encontrado', () => {
     employeeServiceSpy.getEmployeeById.and.returnValue(null);
-
     const fixture2 = createComponentWithRouteId('1');
     const comp2 = fixture2.componentInstance;
     fixture2.detectChanges();
@@ -91,7 +90,7 @@ describe('ReactivateComponent', () => {
     expect(comp2.loading).toBeFalse();
   });
 
-  it('handleReactivate should update employee and navigate on success', fakeAsync(() => {
+  it('handleReactivate atualiza employee e navega em sucesso', fakeAsync(() => {
     spyOn(window, 'alert');
     component.handleReactivate();
     expect(component.reactivating).toBeTrue();
@@ -102,7 +101,7 @@ describe('ReactivateComponent', () => {
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/funcionarios']);
   }));
 
-  it('handleReactivate should set error if update fails', fakeAsync(() => {
+  it('handleReactivate define erro se atualização falhar', fakeAsync(() => {
     employeeServiceSpy.updateEmployee.and.returnValue(false);
     component.handleReactivate();
     tick(1000);
@@ -111,7 +110,7 @@ describe('ReactivateComponent', () => {
     expect(component.reactivating).toBeFalse();
   }));
 
-  it('cancel should navigate back', () => {
+  it('cancel navega para /funcionarios', () => {
     component.cancel();
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/funcionarios']);
   });
