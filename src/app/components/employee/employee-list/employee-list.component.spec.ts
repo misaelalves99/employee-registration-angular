@@ -74,6 +74,7 @@ describe('EmployeeListComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const rows = compiled.querySelectorAll('tbody tr');
     expect(rows.length).toBe(mockEmployees.length);
+
     const firstRowCells = rows[0].querySelectorAll('td');
     expect(firstRowCells[0].textContent).toContain('João');
     expect(firstRowCells[1].textContent).toContain('123.456.789-00');
@@ -102,5 +103,14 @@ describe('EmployeeListComponent', () => {
     const firstRowLinks = compiled.querySelectorAll('tbody tr')[0].querySelectorAll('a');
     expect(firstRowLinks[0].getAttribute('ng-reflect-router-link')).toBe('/employee/details,1');
     expect(firstRowLinks[1].getAttribute('ng-reflect-router-link')).toBe('/employee/edit,1');
+  });
+
+  it('deve manter consistência ao renderizar status Ativo/Inativo', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const firstRowStatus = compiled.querySelectorAll('tbody tr')[0].querySelectorAll('td')[8];
+    const secondRowStatus = compiled.querySelectorAll('tbody tr')[1].querySelectorAll('td')[8];
+
+    expect(firstRowStatus.textContent).toContain('Ativo');
+    expect(secondRowStatus.textContent).toContain('Inativo');
   });
 });

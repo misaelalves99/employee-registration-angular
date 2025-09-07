@@ -74,13 +74,13 @@ describe('EmployeeFormComponent', () => {
     component.formData.departmentId = '1';
     component.formData.admissionDate = '2025-01-01';
     
-    const valid = component.validate();
+    let valid = component.validate();
     expect(valid).toBeFalse();
     expect(component.errors.salary).toBe('Salário deve ser um número positivo.');
 
     component.formData.salary = 'abc';
-    const valid2 = component.validate();
-    expect(valid2).toBeFalse();
+    valid = component.validate();
+    expect(valid).toBeFalse();
     expect(component.errors.salary).toBe('Salário deve ser um número positivo.');
   });
 
@@ -121,7 +121,8 @@ describe('EmployeeFormComponent', () => {
     component.handleSubmit();
     expect(component.formSubmitted.emit).toHaveBeenCalledWith(jasmine.objectContaining({
       name: 'João',
-      salary: '1000'
+      salary: '1000',
+      isActive: true
     }));
   });
 
@@ -143,5 +144,19 @@ describe('EmployeeFormComponent', () => {
 
     component.handleSubmit();
     expect(component.formSubmitted.emit).not.toHaveBeenCalled();
+  });
+
+  it('deve atualizar corretamente formData via ngModel (simulação)', () => {
+    const inputName = fixture.nativeElement.querySelector('input[name="name"]') as HTMLInputElement;
+    inputName.value = 'Maria';
+    inputName.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(component.formData.name).toBe('Maria');
+
+    const selectPosition = fixture.nativeElement.querySelector('select[name="position"]') as HTMLSelectElement;
+    selectPosition.value = POSITIONS[1];
+    selectPosition.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    expect(component.formData.position).toBe(POSITIONS[1]);
   });
 });

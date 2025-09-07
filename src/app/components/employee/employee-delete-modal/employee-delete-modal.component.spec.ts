@@ -65,13 +65,12 @@ describe('EmployeeDeleteModalComponent', () => {
   it('deve chamar handleDelete e emitir deleted e close', fakeAsync(() => {
     spyOn(component.deleted, 'emit');
     spyOn(component.close, 'emit');
-
     spyOn<any>(component, 'deleteEmployeeMock').and.callFake(() => Promise.resolve(true));
 
     component.handleDelete();
     expect(component.loading).toBeTrue();
 
-    tick(); // Avança tempo da Promise
+    tick(); // Avança o tempo da Promise
     fixture.detectChanges();
 
     expect(component.loading).toBeFalse();
@@ -103,4 +102,17 @@ describe('EmployeeDeleteModalComponent', () => {
     expect(component.deleted.emit).not.toHaveBeenCalled();
     expect(component.close.emit).not.toHaveBeenCalled();
   });
+
+  it('deve lidar com erro na exclusão', fakeAsync(() => {
+    spyOn(window, 'alert');
+    spyOn(console, 'error');
+    spyOn<any>(component, 'deleteEmployeeMock').and.callFake(() => Promise.reject('Erro teste'));
+
+    component.handleDelete();
+    tick();
+    fixture.detectChanges();
+
+    expect(window.alert).toHaveBeenCalledWith('Erro ao deletar funcionário. Tente novamente.');
+    expect(component.loading).toBeFalse();
+  }));
 });

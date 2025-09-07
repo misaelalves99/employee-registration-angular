@@ -110,4 +110,18 @@ describe('EmployeeEditFormComponent', () => {
     component.onSubmit();
     expect(component.update.emit).not.toHaveBeenCalled();
   });
+
+  it('deve permitir submeter após corrigir erros', () => {
+    spyOn(component.update, 'emit');
+
+    // Deixa campos obrigatórios vazios para gerar erro
+    component.form.get('name')?.setValue('');
+    component.onSubmit();
+    expect(component.update.emit).not.toHaveBeenCalled();
+
+    // Corrige o valor
+    component.form.get('name')?.setValue('João Corrigido');
+    component.onSubmit();
+    expect(component.update.emit).toHaveBeenCalled();
+  });
 });

@@ -4,11 +4,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Department } from '../../../types/department.model';
-import { Position, POSITIONS_MUTABLE } from '../../../types/position.model';
-import { createMockEmployee } from '../../../mock/employees.mock';
-import { getMockDepartments } from '../../../mock/departments.mock';
+import { EmployeeService } from '../../../services/employee.service';
+import { Employee } from '../../../types/employee.model';
 import { EmployeeForm } from '../../../types/employee-form.model';
+import { Department } from '../../../types/department.model';
+import { Position } from '../../../types/position.model';
 
 @Component({
   selector: 'app-create-employee-page',
@@ -23,7 +23,6 @@ export class CreatePageComponent implements OnInit {
   loading = true;
   errors: string[] = [];
 
-  // Inicializa formData com os mesmos campos do EmployeeForm
   formData: EmployeeForm = {
     id: 0,
     name: '',
@@ -32,7 +31,7 @@ export class CreatePageComponent implements OnInit {
     phone: '',
     address: '',
     position: '' as Position,
-    departmentId: undefined, // Changed from null to undefined for consistency
+    departmentId: undefined,
     salary: 0,
     admissionDate: new Date().toISOString().slice(0, 10),
     isActive: true,
@@ -46,17 +45,17 @@ export class CreatePageComponent implements OnInit {
     'address',
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private employeeService: EmployeeService) {}
 
   async ngOnInit(): Promise<void> {
-    const [deps, pos] = await Promise.all([getMockDepartments(), Promise.resolve(POSITIONS_MUTABLE)]);
-    this.departments = deps;
-    this.positions = pos;
+    // Carrega departamentos e posições do serviço
+    this.departments = this.employeeService.getAllDepartments();
+    this.positions = this.employeeService.getAllPositions();
     this.loading = false;
   }
 
-  async handleSubmit(): Promise<void> {
-    // Validação básica
+  handleSubmit(): void {
+    // Validação obrigatória
     if (
       !this.formData.name ||
       !this.formData.cpf ||
@@ -64,23 +63,18 @@ export class CreatePageComponent implements OnInit {
       !this.formData.salary ||
       !this.formData.position
     ) {
-      console.error('Por favor, preencha todos os campos obrigatórios.'); // Changed alert to console.error
       this.errors = ['Por favor, preencha todos os campos obrigatórios.'];
+      console.error(this.errors[0]);
       return;
     }
 
-    // Find the department object if departmentId is set
-    const department = this.formData.departmentId
-      ? this.departments.find((d) => d.id === this.formData.departmentId)
-      : undefined;
-
-    await createMockEmployee({
+    // Cria novo funcionário usando o serviço
+    const newEmployee: Employee = this.employeeService.createEmployee({
       ...this.formData,
-      id: Date.now(), // gera ID único
-      department: department,
+      departmentId: this.formData.departmentId || undefined,
     });
 
-    console.log('Funcionário criado com sucesso!'); // Changed alert to console.log
+    console.log('Funcionário criado com sucesso!', newEmployee);
     this.router.navigate(['/funcionarios']);
   }
 

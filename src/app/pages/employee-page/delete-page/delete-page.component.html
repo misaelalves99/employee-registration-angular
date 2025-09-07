@@ -6,14 +6,13 @@
 <div *ngIf="!loading && !error && employee" class="container">
   <h1 class="title">Deletar Funcionário</h1>
   <p class="message">
-    Tem certeza que deseja deletar o funcionário <strong>{{ employee.name }}</strong>? <!-- Removido ?. -->
+    Tem certeza que deseja deletar o funcionário <strong>{{ employee.name }}</strong>?
   </p>
 
   <div class="detailsBox">
-    <p><strong>CPF:</strong> {{ employee.cpf }}</p> <!-- Removido ?. -->
-    <p><strong>Email:</strong> {{ employee.email }}</p> <!-- Removido ?. -->
-    <p><strong>Cargo:</strong> {{ employee.position }}</p> <!-- Removido ?. -->
-    <!-- Mantido ?. para department pois department pode ser undefined/null -->
+    <p><strong>CPF:</strong> {{ employee.cpf }}
+    <p><strong>Email:</strong> {{ employee.email }}</p>
+    <p><strong>Cargo:</strong> {{ employee.position }}</p>
     <p><strong>Departamento:</strong> {{ employee.department?.name || 'Não informado' }}</p>
   </div>
 

@@ -27,7 +27,7 @@
     <div class="field">
       <label class="label">Departamento</label>
       <select [(ngModel)]="emp.departmentId" name="departmentId" class="select">
-        <option [value]="undefined">Nenhum</option> <!-- Use undefined for 'Nenhum' -->
+        <option [ngValue]="null">Nenhum</option>
         <option *ngFor="let dep of departments" [value]="dep.id">{{ dep.name }}</option>
       </select>
     </div>

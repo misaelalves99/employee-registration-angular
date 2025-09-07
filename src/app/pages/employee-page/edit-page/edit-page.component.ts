@@ -6,9 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Department } from '../../../types/department.model';
 import { Position, POSITIONS_MUTABLE } from '../../../types/position.model';
-import { getEmployeeById, updateMockEmployee } from '../../../mock/employees.mock';
-import { getMockDepartments } from '../../../mock/departments.mock';
 import { EmployeeForm } from '../../../types/employee-form.model';
+import { EmployeeService } from '../../../services/employee.service';
 
 @Component({
   selector: 'app-edit-employee-page',
@@ -17,7 +16,7 @@ import { EmployeeForm } from '../../../types/employee-form.model';
   templateUrl: './edit-page.component.html',
   styleUrls: ['./edit-page.component.css'],
 })
-export class EditComponent implements OnInit {
+export class EditPageComponent implements OnInit {
   employee: EmployeeForm | null = null;
   departments: Department[] = [];
   positions: Position[] = [];
@@ -32,11 +31,15 @@ export class EditComponent implements OnInit {
     'address',
   ];
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private employeeService: EmployeeService
+  ) {}
 
   async ngOnInit(): Promise<void> {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    const data = getEmployeeById(id);
+    const data = this.employeeService.getEmployeeById(id);
 
     if (!data) {
       this.errors = ['Funcionário não encontrado'];
@@ -44,10 +47,15 @@ export class EditComponent implements OnInit {
       return;
     }
 
-    const [deps, pos] = await Promise.all([getMockDepartments(), Promise.resolve(POSITIONS_MUTABLE)]);
+    const [deps, pos] = await Promise.all([
+      Promise.resolve(this.employeeService.getAllDepartments()),
+      Promise.resolve(POSITIONS_MUTABLE),
+    ]);
+
     this.departments = deps;
     this.positions = pos;
 
+    // ⚡ Nunca usar null em departmentId
     this.employee = {
       id: data.id,
       name: data.name,
@@ -56,7 +64,7 @@ export class EditComponent implements OnInit {
       phone: data.phone || '',
       address: data.address || '',
       position: data.position,
-      departmentId: data.department?.id,
+      departmentId: data.departmentId ?? undefined, // undefined se não houver
       salary: data.salary,
       admissionDate: data.admissionDate.slice(0, 10),
       isActive: data.isActive,
@@ -65,23 +73,30 @@ export class EditComponent implements OnInit {
     this.loading = false;
   }
 
+  /** Mapeia EmployeeForm → Partial<Employee> garantindo undefined no departmentId */
+  private mapFormToEmployee(form: EmployeeForm) {
+    return {
+      ...form,
+      departmentId: form.departmentId ?? undefined,
+    };
+  }
+
   onSubmit(): void {
     if (!this.employee) return;
 
-    // Use undefined if no department is selected (departmentId is undefined or null)
-    const department = this.employee.departmentId
-      ? this.departments.find((d) => d.id === this.employee!.departmentId!) // Added non-null assertion for departmentId
-      : undefined;
+    // Validação obrigatória
+    if (!this.employee.name || !this.employee.cpf || !this.employee.email || !this.employee.position) {
+      this.errors = ['Por favor, preencha todos os campos obrigatórios.'];
+      return;
+    }
 
-    const updated = updateMockEmployee(this.employee.id, {
-      ...this.employee,
-      department,
-      // Ensure departmentId is explicitly set to undefined if no department is selected
-      departmentId: this.employee.departmentId || undefined,
-    });
+    const updated = this.employeeService.updateEmployee(
+      this.employee.id,
+      this.mapFormToEmployee(this.employee)
+    );
 
     if (updated) {
-      console.log('Funcionário atualizado com sucesso!'); // Changed alert to console.log
+      console.log('Funcionário atualizado com sucesso!');
       this.router.navigate(['/funcionarios']);
     } else {
       this.errors = ['Erro ao salvar dados do funcionário.'];

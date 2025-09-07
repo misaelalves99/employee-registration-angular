@@ -25,6 +25,7 @@
       <table *ngIf="employees.length > 0" class="table">
         <thead class="thead">
           <tr>
+            <th class="th">ID</th>
             <th class="th">Nome</th>
             <th class="th">Cargo</th>
             <th class="th">Departamento</th>
@@ -34,6 +35,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let emp of employees" class="trHover">
+            <td class="td">{{ emp.id }}</td>
             <td class="td">{{ emp.name }}</td>
             <td class="td">{{ emp.position }}</td>
             <td class="td">{{ emp.department?.name || '-' }}</td>

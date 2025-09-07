@@ -99,4 +99,31 @@ describe('ToggleStatusButtonComponent', () => {
     expect(button.textContent).toContain('Inativo');
     expect(button.title).toBe('Ativar');
   });
+
+  it('não deve permitir múltiplos cliques durante loading', waitForAsync(async () => {
+    component.employeeId = 1;
+    component.initialStatus = false;
+    component.ngOnInit();
+
+    let fetchResolve: any;
+    spyOn(window, 'fetch').and.returnValue(new Promise(resolve => fetchResolve = resolve) as any);
+    spyOn(component.onStatusChange, 'emit');
+
+    // Primeiro clique inicia loading
+    const button = fixture.debugElement.query(By.css('button'));
+    button.triggerEventHandler('click', null);
+    expect(component.loading).toBeTrue();
+
+    // Segundo clique não deve disparar fetch novamente
+    button.triggerEventHandler('click', null);
+
+    // Resolve fetch
+    fetchResolve({ ok: true, json: () => Promise.resolve({ isActive: true }) });
+
+    setTimeout(() => {
+      expect(component.loading).toBeFalse();
+      expect(component.isActive).toBeTrue();
+      expect(component.onStatusChange.emit).toHaveBeenCalledWith(true);
+    }, 0);
+  }));
 });

@@ -10,7 +10,7 @@ export interface EmployeeForm {
   phone: string;
   address: string;
   position: Position;
-  departmentId: number | undefined; // Changed from null to undefined for consistency
+  departmentId?: number | null; 
   salary: number;
   admissionDate: string;
   isActive: boolean;

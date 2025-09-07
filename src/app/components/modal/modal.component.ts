@@ -1,12 +1,12 @@
 // src/app/components/modal/modal.component.ts
 
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Import CommonModule for *ngIf
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-modal',
-  standalone: true, // Já está marcado como standalone
-  imports: [CommonModule], // Adicionado CommonModule
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.css'],
 })

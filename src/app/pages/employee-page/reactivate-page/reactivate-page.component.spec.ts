@@ -29,9 +29,13 @@ describe('ReactivateComponent', () => {
   };
 
   function createComponentWithRouteId(id: string) {
-    return TestBed.overrideProvider(ActivatedRoute, {
-      useValue: { snapshot: { paramMap: { get: () => id } } }
-    }).createComponent(ReactivateComponent);
+    TestBed.overrideProvider(ActivatedRoute, {
+      useValue: { snapshot: { paramMap: { get: () => id } } },
+    });
+    const f = TestBed.createComponent(ReactivateComponent);
+    const c = f.componentInstance;
+    f.detectChanges();
+    return { fixture: f, component: c };
   }
 
   beforeEach(async () => {
@@ -46,8 +50,8 @@ describe('ReactivateComponent', () => {
       providers: [
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } } } },
-        { provide: EmployeeService, useValue: employeeServiceSpy }
-      ]
+        { provide: EmployeeService, useValue: employeeServiceSpy },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReactivateComponent);
@@ -55,42 +59,34 @@ describe('ReactivateComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit deve carregar employee', () => {
+  it('ngOnInit carrega employee corretamente', () => {
     expect(component.employee).toEqual(mockEmployee);
     expect(component.loading).toBeFalse();
     expect(component.error).toBeNull();
   });
 
-  it('ngOnInit deve setar erro se ID inválido', () => {
-    const fixture2 = createComponentWithRouteId('abc');
-    const comp2 = fixture2.componentInstance;
-    fixture2.detectChanges();
-
+  it('ngOnInit define erro se ID inválido', () => {
+    const { component: comp2 } = createComponentWithRouteId('abc');
     comp2.ngOnInit();
-
     expect(comp2.employee).toBeNull();
     expect(comp2.error).toBe('ID inválido.');
     expect(comp2.loading).toBeFalse();
   });
 
-  it('ngOnInit deve setar erro se employee não encontrado', () => {
+  it('ngOnInit define erro se employee não encontrado', () => {
     employeeServiceSpy.getEmployeeById.and.returnValue(null);
-    const fixture2 = createComponentWithRouteId('1');
-    const comp2 = fixture2.componentInstance;
-    fixture2.detectChanges();
-
+    const { component: comp2 } = createComponentWithRouteId('1');
     comp2.ngOnInit();
-
     expect(comp2.employee).toBeNull();
     expect(comp2.error).toBe('Funcionário não encontrado.');
     expect(comp2.loading).toBeFalse();
   });
 
-  it('handleReactivate atualiza employee e navega em sucesso', fakeAsync(() => {
+  it('handleReactivate atualiza employee e navega em caso de sucesso', fakeAsync(() => {
     spyOn(window, 'alert');
     component.handleReactivate();
     expect(component.reactivating).toBeTrue();
@@ -114,4 +110,12 @@ describe('ReactivateComponent', () => {
     component.cancel();
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/funcionarios']);
   });
+
+  it('renderiza elementos do template corretamente', fakeAsync(() => {
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('.pageTitle')?.textContent).toContain('Reativar Funcionário');
+    expect(compiled.querySelector('.employeeCard')).toBeTruthy();
+    expect(compiled.querySelector('.employeeCard h5')?.textContent).toContain(mockEmployee.name);
+  }));
 });

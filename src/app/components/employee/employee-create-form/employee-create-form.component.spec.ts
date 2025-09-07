@@ -13,6 +13,7 @@ describe('EmployeeCreateFormComponent', () => {
     { id: 1, name: 'RH' },
     { id: 2, name: 'TI' },
   ];
+
   const mockOnCreate = jasmine.createSpy('onCreate').and.returnValue(Promise.resolve());
 
   beforeEach(waitForAsync(() => {
@@ -33,20 +34,20 @@ describe('EmployeeCreateFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('deve inicializar o formulário com campos vazios', () => {
+  it('inicializa o formulário com campos vazios', () => {
     const form = component.form.value;
     expect(form.name).toBe('');
     expect(form.cpf).toBe('');
     expect(form.email).toBe('');
     expect(form.position).toBe('');
-    expect(form.departmentId).toBeNull(); // agora null por ser number
+    expect(form.departmentId).toBeNull();
     expect(form.salary).toBe('');
     expect(form.admissionDate).toBe('');
     expect(form.phone).toBe('');
     expect(form.address).toBe('');
   });
 
-  it('deve exibir erros ao submeter formulário vazio', async () => {
+  it('exibe erros quando submetido vazio', async () => {
     await component.handleSubmit();
     expect(component.errors['name']).toBe('Nome é obrigatório.');
     expect(component.errors['cpf']).toBe('CPF é obrigatório.');
@@ -58,7 +59,7 @@ describe('EmployeeCreateFormComponent', () => {
     expect(mockOnCreate).not.toHaveBeenCalled();
   });
 
-  it('deve chamar onCreate com dados válidos e resetar formulário', async () => {
+  it('chama onCreate com dados válidos e reseta o formulário', async () => {
     component.form.setValue({
       name: 'João',
       cpf: '12345678900',
@@ -77,8 +78,9 @@ describe('EmployeeCreateFormComponent', () => {
     const formDataArg = mockOnCreate.calls.mostRecent().args[0] as FormData;
     expect(formDataArg.get('name')).toBe('João');
     expect(formDataArg.get('cpf')).toBe('12345678900');
+    expect(formDataArg.get('departmentId')).toBe(String(mockDepartments[0].id));
+    expect(formDataArg.get('salary')).toBe('2500.50');
 
-    // Verifica que o formulário foi resetado corretamente
     const resetForm = component.form.value;
     expect(resetForm.name).toBe('');
     expect(resetForm.cpf).toBe('');
@@ -91,7 +93,7 @@ describe('EmployeeCreateFormComponent', () => {
     expect(resetForm.address).toBe('');
   });
 
-  it('deve permitir preenchimento de campos opcionais', async () => {
+  it('permite preenchimento de campos opcionais sem erro', async () => {
     component.form.patchValue({
       phone: '99999999',
       address: 'Rua B',
@@ -99,5 +101,17 @@ describe('EmployeeCreateFormComponent', () => {
     await component.handleSubmit();
     expect(component.errors['phone']).toBeUndefined();
     expect(component.errors['address']).toBeUndefined();
+  });
+
+  it('não permite salary inválido', async () => {
+    component.form.patchValue({ salary: 'abc' });
+    await component.handleSubmit();
+    expect(component.errors['salary']).toBe('Salário inválido.');
+  });
+
+  it('não permite departmentId inválido', async () => {
+    component.form.patchValue({ departmentId: null });
+    await component.handleSubmit();
+    expect(component.errors['departmentId']).toBe('Departamento é obrigatório.');
   });
 });

@@ -1,5 +1,6 @@
 // src/app/types/position.model.ts
 
+// Cargos fixos iniciais
 export const POSITIONS = [
   'Desenvolvedor',
   'Analista',
@@ -8,6 +9,14 @@ export const POSITIONS = [
   'Outro',
 ] as const;
 
-export type Position = typeof POSITIONS[number];
+// Tipo para cargos (string literal para os fixos)
+export type FixedPosition = typeof POSITIONS[number];
+
+// Tipo geral de posição (permite cargos adicionais)
+export type Position = string;
+
+// Tipo de valor de formulário (permite vazio)
 export type PositionFormValue = '' | Position;
+
+// Lista mutável de posições para adicionar novos cargos
 export const POSITIONS_MUTABLE: Position[] = [...POSITIONS];

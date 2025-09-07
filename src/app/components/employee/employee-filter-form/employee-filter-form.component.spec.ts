@@ -114,12 +114,16 @@ describe('EmployeeFilterFormComponent', () => {
     input.value = '';
     input.dispatchEvent(new Event('input'));
 
-    const select = fixture.nativeElement.querySelector('#position') as HTMLSelectElement;
-    select.value = '';
-    select.dispatchEvent(new Event('change'));
+    const selectPos = fixture.nativeElement.querySelector('#position') as HTMLSelectElement;
+    selectPos.value = '';
+    selectPos.dispatchEvent(new Event('change'));
+
+    const selectStatus = fixture.nativeElement.querySelector('#isActive') as HTMLSelectElement;
+    selectStatus.value = '';
+    selectStatus.dispatchEvent(new Event('change'));
 
     expect(component.filtersChange.emit).toHaveBeenCalledWith(
-      jasmine.objectContaining({ departmentId: '', position: '' })
+      jasmine.objectContaining({ departmentId: '', position: '', isActive: '' })
     );
   });
 });

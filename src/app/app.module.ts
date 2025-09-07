@@ -24,7 +24,7 @@ import { HomeComponent } from './pages/home-page/home-page.component';
 import { PrivacyPageComponent } from './pages/privacy-page/privacy-page.component';
 import { EmployeePageComponent } from './pages/employee-page/employee-page.component';
 import { CreatePageComponent } from './pages/employee-page/create-page/create-page.component';
-import { EditComponent } from './pages/employee-page/edit-page/edit-page.component';
+import { EditPageComponent } from './pages/employee-page/edit-page/edit-page.component';
 import { DeleteComponent } from './pages/employee-page/delete-page/delete-page.component';
 import { ReactivateComponent } from './pages/employee-page/reactivate-page/reactivate-page.component';
 import { EmployeeDetailsComponent } from './pages/employee-page/details-page/details-page.component';
@@ -35,19 +35,16 @@ import { routes } from './app.routes';
 
 @NgModule({
   declarations: [
-    // REMOVIDO: CreatePageComponent (agora é standalone e importado)
   ],
   imports: [
     BrowserModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(routes), // Configura as rotas principais
-
-    // Importa todos os componentes standalone
+    RouterModule.forRoot(routes),
     EmployeeCreateFormComponent,
     EmployeeDetailsComponent,
-    EditComponent,
+    EditPageComponent,
     DeleteComponent,
     ReactivateComponent,
     EmployeePageComponent,
@@ -64,7 +61,5 @@ import { routes } from './app.routes';
     FooterComponent,
     CreatePageComponent,
   ],
-  // AppComponent agora é standalone, então não é bootstrapped por um NgModule
-  // bootstrap: [AppComponent],
 })
 export class AppModule {}

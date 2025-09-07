@@ -11,7 +11,7 @@ import { EmployeeService } from '../../../services/employee.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './reactivate-page.component.html',
-  styleUrls: ['./reactivate-page.component.css'], // ALTERADO: de .scss para .css
+  styleUrls: ['./reactivate-page.component.css'],
 })
 export class ReactivateComponent implements OnInit {
   employee: Employee | null = null;

@@ -21,7 +21,7 @@ describe('EmployeeToggleStatusButtonComponent', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Verifica que não existem requisições pendentes
+    httpMock.verify();
   });
 
   it('deve criar o componente', () => {
@@ -81,7 +81,7 @@ describe('EmployeeToggleStatusButtonComponent', () => {
     const req = httpMock.expectOne('/api/employee/inactivate/1');
     expect(req.request.method).toBe('POST');
 
-    req.flush({}); // simula resposta bem-sucedida
+    req.flush({});
     expect(component.onToggle.emit).toHaveBeenCalledWith(false);
     expect(component.loading).toBeFalse();
   });
@@ -119,5 +119,20 @@ describe('EmployeeToggleStatusButtonComponent', () => {
 
     expect(window.alert).toHaveBeenCalledWith('Erro ao atualizar status.');
     expect(component.loading).toBeFalse();
+  });
+
+  it('não deve permitir múltiplos cliques durante o carregamento', () => {
+    spyOn(component.onToggle, 'emit');
+
+    component.employeeId = 4;
+    component.isActive = true;
+    component.loading = true; // simula loading já ativo
+    fixture.detectChanges();
+
+    const button = fixture.debugElement.query(By.css('button'));
+    button.triggerEventHandler('click', null);
+
+    httpMock.expectNone('/api/employee/inactivate/4');
+    expect(component.onToggle.emit).not.toHaveBeenCalled();
   });
 });

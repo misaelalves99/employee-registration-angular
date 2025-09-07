@@ -1,15 +1,15 @@
 // src/app/pages/employee-page/details-page/details-page.component.ts
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router'; // Import RouterModule
-import { CommonModule } from '@angular/common'; // Import CommonModule
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { EmployeeService } from '../../../services/employee.service';
 import { Employee } from '../../../types/employee.model';
 
 @Component({
   selector: 'app-employee-details',
-  standalone: true, // Marcado como standalone
-  imports: [CommonModule, RouterModule], // Importa CommonModule e RouterModule
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './details-page.component.html',
   styleUrls: ['./details-page.component.css'],
 })

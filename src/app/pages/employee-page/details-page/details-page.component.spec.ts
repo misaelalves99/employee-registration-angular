@@ -6,6 +6,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { EmployeeService } from '../../../services/employee.service';
 import { Employee } from '../../../types/employee.model';
+import { By } from '@angular/platform-browser';
 
 describe('EmployeeDetailsComponent', () => {
   let component: EmployeeDetailsComponent;
@@ -85,5 +86,30 @@ describe('EmployeeDetailsComponent', () => {
   it('formatDate deve formatar string de data para pt-BR', () => {
     const formatted = component.formatDate('2022-01-15');
     expect(formatted).toBe(new Date('2022-01-15').toLocaleDateString('pt-BR'));
+  });
+
+  it('deve renderizar detalhes do funcionário no template', () => {
+    employeeServiceSpy.getEmployeeById.and.returnValue(mockEmployee);
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('.title')?.textContent).toContain('Detalhes do Funcionário');
+    expect(compiled.querySelector('.card')?.textContent).toContain(mockEmployee.name);
+    expect(compiled.querySelector('.card')?.textContent).toContain(mockEmployee.cpf);
+    expect(compiled.querySelector('.card')?.textContent).toContain(mockEmployee.email);
+    expect(compiled.querySelector('.card')?.textContent).toContain(mockEmployee.position);
+    expect(compiled.querySelector('.card')?.textContent).toContain(mockEmployee.department?.name || '');
+  });
+
+  it('deve renderizar mensagem de não encontrado no template', () => {
+    employeeServiceSpy.getEmployeeById.and.returnValue(null);
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.notFoundTitle')?.textContent).toContain('Funcionário não encontrado');
+    expect(compiled.querySelector('a')?.getAttribute('routerLink')).toBe('/funcionarios');
   });
 });

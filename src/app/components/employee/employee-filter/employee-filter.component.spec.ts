@@ -94,7 +94,31 @@ describe('EmployeeFilterComponent', () => {
     );
   });
 
-  it('deve emitir filterChange vazio ao resetar o formulário', () => {
+  it('deve permitir submissão parcial de filtros', () => {
+    spyOn(component.filterChange, 'emit');
+
+    component.filterForm.patchValue({
+      search: 'Teste',
+      departmentId: '',
+      position: '',
+      isActive: '',
+      admissionDateFrom: '',
+      admissionDateTo: '',
+    });
+
+    component.onSubmit();
+
+    expect(component.filterChange.emit).toHaveBeenCalledWith({
+      search: 'Teste',
+      departmentId: undefined,
+      position: undefined,
+      isActive: undefined,
+      admissionDateFrom: undefined,
+      admissionDateTo: undefined,
+    });
+  });
+
+  it('deve resetar o formulário e emitir filtros vazios', () => {
     spyOn(component.filterChange, 'emit');
 
     component.filterForm.setValue({

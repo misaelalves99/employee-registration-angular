@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Employee } from '../../../types/employee.model';
-import { getMockEmployees, deleteMockEmployee } from '../../../mock/mock-data.util';
+import { EmployeeService } from '../../../services/employee.service';
 
 @Component({
   selector: 'app-employee-delete',
@@ -18,12 +18,15 @@ export class DeleteComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private employeeService: EmployeeService
+  ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    const employees = getMockEmployees();
-    const found = employees.find(emp => emp.id === id);
+    const found = this.employeeService.getEmployeeById(id);
 
     if (!found) {
       this.error = 'Funcionário não encontrado.';
@@ -40,13 +43,13 @@ export class DeleteComponent implements OnInit {
     const confirmed = confirm(`Tem certeza que deseja deletar o funcionário ${this.employee.name}?`);
     if (!confirmed) return;
 
-    try {
-      deleteMockEmployee(this.employee.id);
+    const success = this.employeeService.deleteEmployee(this.employee.id);
+    if (success) {
       alert('Funcionário deletado com sucesso!');
       this.router.navigate(['/funcionarios']);
-    } catch (err) {
-      console.error('Erro ao deletar funcionário:', err); // Adicionado prefixo para clareza
-      this.error = 'Erro ao deletar funcionário. Tente novamente.'; // Mensagem de erro mais amigável
+    } else {
+      console.error('Erro ao deletar funcionário');
+      this.error = 'Erro ao deletar funcionário. Tente novamente.';
     }
   }
 

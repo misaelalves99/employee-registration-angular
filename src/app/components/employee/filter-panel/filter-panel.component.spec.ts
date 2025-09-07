@@ -70,4 +70,36 @@ describe('FilterPanelComponent', () => {
       departmentId: undefined,
     });
   });
+
+  it('deve converter corretamente departmentId para número mesmo com string numérica', () => {
+    spyOn(component.onFilterChange, 'emit');
+
+    component.departmentId = '5';
+    fixture.detectChanges();
+
+    component.handleFilter();
+
+    expect(component.onFilterChange.emit).toHaveBeenCalledWith({
+      position: undefined,
+      departmentId: 5,
+    });
+  });
+
+  it('deve permitir múltiplos cliques consecutivos', () => {
+    spyOn(component.onFilterChange, 'emit');
+
+    const button = fixture.debugElement.query(By.css('button'));
+    component.position = 'Analista';
+    component.departmentId = '1';
+    fixture.detectChanges();
+
+    button.triggerEventHandler('click', null);
+    button.triggerEventHandler('click', null);
+
+    expect(component.onFilterChange.emit).toHaveBeenCalledTimes(2);
+    expect(component.onFilterChange.emit).toHaveBeenCalledWith({
+      position: 'Analista',
+      departmentId: 1,
+    });
+  });
 });

@@ -4,13 +4,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeleteComponent } from './delete-page.component';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import * as mockData from '../../../mock/mock-data.util';
+import { EmployeeService } from '../../../services/employee.service';
 import type { Employee } from '../../../types/employee.model';
 
 describe('DeleteComponent', () => {
   let component: DeleteComponent;
   let fixture: ComponentFixture<DeleteComponent>;
   let router: Router;
+  let employeeService: EmployeeService;
 
   const mockEmployee: Employee = {
     id: 1,
@@ -32,31 +33,37 @@ describe('DeleteComponent', () => {
       imports: [DeleteComponent, CommonModule, RouterModule],
       providers: [
         { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } } } }
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } } } },
+        {
+          provide: EmployeeService,
+          useValue: {
+            getEmployeeById: jasmine.createSpy('getEmployeeById').and.returnValue(mockEmployee),
+            deleteEmployee: jasmine.createSpy('deleteEmployee').and.returnValue(true)
+          }
+        }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DeleteComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
-
-    spyOn(mockData, 'getMockEmployees').and.returnValue([mockEmployee]);
-    spyOn(mockData, 'deleteMockEmployee').and.callFake(() => {});
+    employeeService = TestBed.inject(EmployeeService);
   });
 
-  it('should create the component', () => {
+  it('deve criar o componente', () => {
     expect(component).toBeTruthy();
   });
 
   it('ngOnInit deve carregar funcionário pelo id', () => {
     component.ngOnInit();
+    expect(employeeService.getEmployeeById).toHaveBeenCalledWith(1);
     expect(component.employee).toEqual(mockEmployee);
     expect(component.loading).toBeFalse();
     expect(component.error).toBeNull();
   });
 
-  it('ngOnInit deve definir erro se funcionário não encontrado', () => {
-    (mockData.getMockEmployees as jasmine.Spy).and.returnValue([]);
+  it('ngOnInit define erro se funcionário não encontrado', () => {
+    (employeeService.getEmployeeById as jasmine.Spy).and.returnValue(null);
     component.ngOnInit();
     expect(component.employee).toBeNull();
     expect(component.error).toBe('Funcionário não encontrado.');
@@ -69,7 +76,7 @@ describe('DeleteComponent', () => {
 
     component.handleDelete();
 
-    expect(mockData.deleteMockEmployee).toHaveBeenCalledWith(mockEmployee.id);
+    expect(employeeService.deleteEmployee).toHaveBeenCalledWith(mockEmployee.id);
     expect(window.alert).toHaveBeenCalledWith('Funcionário deletado com sucesso!');
     expect(router.navigate).toHaveBeenCalledWith(['/funcionarios']);
   });
@@ -81,7 +88,7 @@ describe('DeleteComponent', () => {
 
     component.handleDelete();
 
-    expect(mockData.deleteMockEmployee).not.toHaveBeenCalled();
+    expect(employeeService.deleteEmployee).not.toHaveBeenCalled();
     expect(window.alert).not.toHaveBeenCalled();
     expect(router.navigate).not.toHaveBeenCalled();
   });
@@ -90,7 +97,7 @@ describe('DeleteComponent', () => {
     spyOn(window, 'confirm').and.returnValue(true);
     spyOn(window, 'alert');
     component.employee = mockEmployee;
-    (mockData.deleteMockEmployee as jasmine.Spy).and.throwError('Falha');
+    (employeeService.deleteEmployee as jasmine.Spy).and.throwError('Falha');
 
     component.handleDelete();
 

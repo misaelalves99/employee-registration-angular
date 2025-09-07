@@ -1,7 +1,5 @@
 <!-- src/app/pages/employee-page/create-page/create-page.component.html -->
 
-<!-- src/app/pages/employee-page/create-page/create-page.component.html -->
-
 <div class="container" *ngIf="!loading; else loadingTemplate">
   <h1 class="title">Criar Funcionário</h1>
 
@@ -31,8 +29,8 @@
     <div class="field">
       <label class="label">Departamento</label>
       <select class="input" [(ngModel)]="formData.departmentId" name="departmentId">
-        <option [value]="undefined">Selecione...</option> <!-- Use undefined for 'Nenhum' -->
-        <option *ngFor="let dep of departments" [value]="dep.id">{{ dep.name }}</option>
+        <option [ngValue]="undefined">Selecione...</option>
+        <option *ngFor="let dep of departments" [ngValue]="dep.id">{{ dep.name }}</option>
       </select>
     </div>
 
